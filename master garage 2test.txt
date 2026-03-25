@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Garage Master Fusion</title>
+    <style>
+        body { margin: 0; font-family: sans-serif; background: #0f172a; color: white; }
+        #login { position: fixed; inset: 0; background: #0f172a; z-index: 10000; display: none; align-items: center; justify-content: center; }
+        .card { background: #1e293b; padding: 30px; border-radius: 20px; width: 85%; max-width: 350px; text-align: center; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: none; font-size: 16px; box-sizing: border-box; }
+        #menu { display: flex; min-height: 100vh; flex-direction: column; align-items: center; justify-content: center; gap: 15px; padding: 20px; box-sizing: border-box; }
+        .btn-menu { width: 100%; max-width: 400px; padding: 25px; border-radius: 15px; border: none; color: white; font-weight: bold; font-size: 1.1rem; background: #ea580c; cursor: pointer; }
+        #view { display: none; height: 100vh; flex-direction: column; background: white; }
+        nav { background: #1e293b; padding: 10px; }
+        iframe { flex: 1; border: none; width: 100%; }
+        .btn-back { background: #475569; color: white; border: none; padding: 10px 20px; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <template id="app-code-0">﻿<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Commande Fournitures v6.7</title>
+
+
+    <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/12341/12341366.png">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/12341/12341366.png">
+
+
+    <style>
+        /* --- SYSTÈME DE THÈMES (Variables CSS) --- */
+        :root {
+            --primary-600: #ea580c; /* Orange par défaut */
+            --primary-700: #c2410c;
+            --primary-50: #fff7ed;
+            --primary-100: #ffedd5;
+            --primary-200: #fed7aa;
+        }
+
+
+        [data-theme="blue"] {
+            --primary-600: #2563eb;
+            --primary-700: #1d4ed8;
+            --primary-50: #eff6ff;
+            --primary-100: #dbeafe;
+            --primary-200: #bfdbfe;
+        }
+
+
+        [data-theme="green"] {
+            --primary-600: #16a34a;
+            --primary-700: #15803d;
+            --primary-50: #f0fdf4;
+            --primary-100: #dcfce7;
+            --primary-200: #bbf7d0;
+        }
+
+
+        [data-theme="red"] {
+            --primary-600: #dc2626;
+            --primary-700: #b91c1c;
+            --primary-50: #fef2f2;
+            --primary-100: #fee2e2;
+            --primary-200: #fecaca;
+        }
+
+
+        /* --- STYLES INTÉGRÉS (Sans internet) --- */
+        * { box-sizing: border-box; font-family: sans-serif; }
+        body { background-color: #f3f4f6; margin: 0; min-height: 100vh; }
+        .no-print { max-width: 500px; margin: 0 auto; background: white; min-height: 100vh; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
+        
+        header { background: var(--primary-600); color: white; padding: 1rem; position: sticky; top: 0; z-index: 20; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); text-align: center; }
+        header h1 { margin: 0; font-size: 1.25rem; font-weight: bold; letter-spacing: 0.05em; text-transform: uppercase; }
+        header p { margin: 0; font-size: 0.75rem; opacity: 0.8; }
+
+
+        #tab-bar { display: flex; overflow-x: auto; background: white; border-bottom: 1px solid #e5e7eb; position: sticky; top: 60px; z-index: 20; }
+        #tab-bar button { padding: 0.75rem 1rem; white-space: nowrap; font-size: 0.875rem; font-weight: 500; border: none; background: none; border-bottom: 4px solid transparent; cursor: pointer; transition: all 0.2s; }
+        .tab-active { border-bottom-color: var(--primary-600) !important; color: var(--primary-600); font-weight: bold; }
+
+
+        #product-list { padding: 1rem; flex: 1; padding-bottom: 100px; }
+        .item-card { display: flex; align-items: center; justify-content: space-between; background: white; padding: 0.75rem; margin-bottom: 0.5rem; border-radius: 0.5rem; border: 1px solid #e5e7eb; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .item-info p { margin: 0; }
+        .item-name { font-weight: bold; color: #1f2937; font-size: 0.875rem; }
+        .item-ref { font-size: 10px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.025em; }
+
+
+        .qty-controls { display: flex; align-items: center; gap: 1rem; }
+        .btn-qty { width: 40px; height: 40px; border-radius: 9999px; border: 1px solid #d1d5db; font-weight: 900; font-size: 1.25rem; cursor: pointer; background: #f9fafb; }
+        .btn-qty-plus { color: var(--primary-600); background: var(--primary-50); border-color: var(--primary-200); }
+        .qty-val { width: 32px; text-align: center; font-weight: bold; font-size: 1.125rem; }
+
+
+        .footer-nav { position: fixed; bottom: 0; left: 0; right: 0; max-width: 500px; margin: 0 auto; padding: 1rem; background: white; border-top: 1px solid #e5e7eb; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; z-index: 30; }
+        .btn-action { font-weight: bold; padding: 0.75rem; border-radius: 0.75rem; border: none; cursor: pointer; font-size: 0.875rem; color: white; }
+        .btn-print { grid-column: span 2; background: #16a34a; }
+        .btn-share { background: var(--primary-600); }
+        .btn-reset { background: #e5e7eb; color: #374151; }
+
+
+        /* --- CONFIG STYLES --- */
+        .config-box { padding: 1rem; border-radius: 0.75rem; border: 1px solid; margin-bottom: 1.5rem; }
+        .box-orange { background: var(--primary-50); border-color: var(--primary-200); }
+        .input-std { width: 100%; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid #d1d5db; margin-bottom: 0.5rem; font-size: 0.875rem; }
+        .step-input { width: 50px; padding: 2px; text-align: center; border: 1px solid #ccc; border-radius: 4px; font-weight: bold; }
+
+
+        /* --- IMPRESSION --- */
+        .print-only { display: none; }
+        @media print {
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            .print-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+            .category-block { break-inside: avoid; margin-bottom: 15px; border: 1px solid #000; }
+            table { width: 100%; border-collapse: collapse; }
+            th { background: #f0f0f0; font-size: 8pt; padding: 4px; border-bottom: 1px solid #000; text-align: left; }
+            td { font-size: 9pt; padding: 5px; border-bottom: 1px solid #ddd; }
+            .qty-cell { text-align: center; font-weight: bold; background: #f9f9f9; width: 40px; border-left: 1px solid #ccc; }
+        }
+    </style>
+</head>
+<body data-theme="orange">
+
+
+    <div class="no-print">
+        <header>
+            <h1 id="main-title">BON DE COMMANDE</h1>
+            <p>Fournitures v6.7</p>
+        </header>
+
+
+        <div id="tab-bar"></div>
+        <div id="product-list"></div>
+
+
+        <div class="footer-nav">
+            <button onclick="generatePrint()" class="btn-action btn-print">🖨️ PDF PRO</button>
+            <button onclick="shareOrder()" class="btn-action btn-share">📤 PARTAGE</button>
+            <button onclick="resetAll()" class="btn-action btn-reset">RÉINIT.</button>
+        </div>
+    </div>
+
+
+    <div id="print-zone" class="print-only" style="padding: 10px;">
+        <div style="border-bottom: 4px solid black; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: flex-end;">
+            <h1 style="text-transform: uppercase; margin:0;">Bon de Commande</h1>
+            <p id="print-date" style="font-weight: bold;"></p>
+        </div>
+        <div id="print-content" class="print-grid"></div>
+    </div>
+
+
+    <script>
+        const defaultData = {
+            "ABRASIF": [{n: "Scotchbrite", r: "3M07904"}, {n: "Disque P120", r: "LKENA1290"}, {n: "Disque P180", r: "LKENA1292"}, {n: "Disque P240", r: "LKENA1294"}, {n: "Disque P320", r: "LKENA1295"}, {n: "Disque P400", r: "LKENA1296"}, {n: "Disque P500", r: "LKENA1455"}, {n: "Disque P600", r: "LKENA1298"}, {n: "EPONGE P600", r: "LKENA1468"}, {n: "EPONGE P1000", r: "LKENA1469"}, {n: "Soft hand P400", r: "3M50337"}, {n: "Soft hand P600", r: "3M50339"}, {n: "Soft hand P800", r: "3M50340"}, {n: "CUBITRON P80", r: "3M34561"}, {n: "CUBITRON P120 LARGE", r: "3M34573"}, {n: "CUBITRON P120", r: "3M34562"}, {n: "CUBITRON P240", r: "3M34566"}, {n: "CUBITRON P400", r: "3M51437"}, {n: "Feuille bleu P400", r: "3M35110"}, {n: "Feuille bleu P600", r: "3M35111"}, {n: "Feuille bleu P800", r: "3M35112"}, {n: "Triz 32mm 3000", r: "3M50079", s: 100}, {n: "Triz 75mm 1000", r: "3M50413", s: 15}, {n: "Triz 75mm 3000", r: "3M02087", s: 15}, {n: "Triz 75mm 6000", r: "3M51131", s: 15}, {n: "Triz 150mm 3000", r: "3M02085", s: 15}],
+            "MAROUFLAGE": [{n: "Bandecache 50mm", r: "3M06313", s: 24}, {n: "Bandecache 50mm vert", r: "3M50981", s: 24}, {n: "Bandecache 18mm jaune", r: "LKEN85781"}, {n: "Ruban mousse", r: "3M09678"}, {n: "Papier craft", r: "3M06284"}, {n: "Bache", r: "3M50988"}],
+            "MASTIC": [{n: "Mastic polyester", r: "3M00051076"}, {n: "Mastic plastique", r: "LKEN86958"}, {n: "Mastique KENT", r: "LKEN86942"}, {n: "Mastic fibre", r: "LKEN86959"}, {n: "Mastice allu", r: "LKEN86961"}],
+            "PRÉPA / ÉQUIP.": [{n: "Bol prépa 650ml", r: "997180"}, {n: "Bol prépa 1100ml", r: "997181"}, {n: "PPS 400ml", r: "3M26312"}, {n: "PPS 650ml", r: "3M26026"}, {n: "Pot 2l", r: "3M50405"}, {n: "Essuie main", r: "1606242080"}, {n: "Chiffon 3M", r: "3M34567"}, {n: "Tampon essuyage", r: "973844"}, {n: "Filtre cornet", r: "9739G5"}],
+            "LUSTRANT / MOUSSE": [{n: "Mousse lustrage", r: "3M34124"}, {n: "Mousse lustrage", r: "3M34127"}, {n: "Lustrant blanc", r: "3M34131"}, {n: "Lustrant violet", r: "3M34134"}, {n: "Bobidou", r: "LGET100521"}, {n: "Chiffon lustrage", r: "3M60668"}, {n: "Doubleface", r: "3M80322"}],
+            "COMBINAISON": [{n: "Combinaison M", r: "3M4540+M"}, {n: "Combinaison L", r: "3M4540+L"}, {n: "Combinaison XL", r: "3M4540+XL"}, {n: "Masque poussière", r: "3M8822"}],
+            "BOMBE PEINTURE": [{n: "Vernis", r: "LKEN84110"}, {n: "Bombe noir mat", r: "LKEN86245"}, {n: "Noir structurant", r: "LKEN86735"}],
+            "AUTRE": [{n: "Corde à piano", r: "KE0209"}, {n: "Passe fil parbrise", r: "KE0109"}, {n: "Buse Bi-compos", r: "K86031"}, {n: "Cleaner plastique", r: "K34699"}, {n: "Gant protection", r: "1613412380"}, {n: "Agrafe torsadé", r: "K86040"}, {n: "Agrafe torsadé Longue", r: "K86358"}, {n: "Agrafe angle ext", r: "K86279"}, {n: "Agrafe angle int", r: "K86280"}, {n: "Agrafe courte normal", r: "K86038"}, {n: "Glu cyanno liquide", r: "GET1CY20"}, {n: "pinceau retouche", r: "GET3PRV"}, {n: "Chiffon tissu", r: "972459"}, {n: "Buse standard", r: "LKEN34192"}, {n: "Chican", r: "LKEN85385"}, {n: "Produit jante", r: "LBAR37136"}]
+        };
+
+
+        let myData = JSON.parse(localStorage.getItem('carro_v6_data')) || defaultData;
+        let currentTheme = localStorage.getItem('carro_theme') || 'orange';
+        document.body.setAttribute('data-theme', currentTheme);
+
+
+        let quantities = {};
+        let manualItems = [];
+        let currentTab = Object.keys(myData)[0];
+
+
+        function saveToStorage() { localStorage.setItem('carro_v6_data', JSON.stringify(myData)); }
+
+
+        function initTabs() {
+            const tabBar = document.getElementById('tab-bar');
+            tabBar.innerHTML = "";
+            Object.keys(myData).forEach(cat => {
+                const btn = document.createElement('button');
+                btn.innerText = cat;
+                btn.id = "btn-" + cat;
+                btn.onclick = () => showTab(cat);
+                tabBar.appendChild(btn);
+            });
+            const manBtn = document.createElement('button');
+            manBtn.innerText = "✍️ MANUEL"; manBtn.id = "btn-MANUEL"; manBtn.onclick = () => showTab("MANUEL");
+            tabBar.appendChild(manBtn);
+            
+            const confBtn = document.createElement('button');
+            confBtn.innerText = "🔧 PARAMS"; confBtn.id = "btn-CONFIG"; confBtn.onclick = () => showTab("CONFIG");
+            tabBar.appendChild(confBtn);
+
+
+            showTab(currentTab);
+        }
+
+
+        function showTab(cat) {
+            currentTab = cat;
+            document.querySelectorAll('#tab-bar button').forEach(b => b.classList.remove('tab-active'));
+            document.getElementById('btn-' + cat)?.classList.add('tab-active');
+            const content = document.getElementById('product-list');
+            content.innerHTML = "";
+
+
+            if (cat === "MANUEL") renderManualForm(content);
+            else if (cat === "CONFIG") renderConfig(content);
+            else {
+                (myData[cat] || []).forEach(p => {
+                    const q = quantities[p.r] || 0;
+                    content.innerHTML += `
+                        <div class="item-card">
+                            <div class="item-info">
+                                <p class="item-name">${p.n}</p>
+                                <p class="item-ref">Réf: ${p.r} ${p.s ? '(x'+p.s+')' : ''}</p>
+                            </div>
+                            <div class="qty-controls">
+                                <button onclick="updateQty('${p.r}', -1)" class="btn-qty">-</button>
+                                <span class="qty-val">${q}</span>
+                                <button onclick="updateQty('${p.r}', 1)" class="btn-qty btn-qty-plus">+</button>
+                            </div>
+                        </div>`;
+                });
+            }
+        }
+
+
+        function updateQty(ref, change) {
+            let step = 1;
+            Object.values(myData).flat().forEach(p => { if(p.r === ref && p.s) step = parseInt(p.s); });
+            quantities[ref] = Math.max(0, (quantities[ref] || 0) + (change * step));
+            showTab(currentTab);
+        }
+
+
+        function renderConfig(container) {
+            let html = `
+            <div class="config-box box-orange" style="border-color: #6b7280; background: #fff;">
+                <h3 style="margin-top:0; font-size: 14px; border-bottom: 1px solid #ddd; padding-bottom: 5px;">🎨 CHOIX DU THÈME</h3>
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <button onclick="changeTheme('orange')" style="flex:1; background:#ea580c; color:white; border:none; padding:10px; border-radius:5px; cursor:pointer;">Orange</button>
+                    <button onclick="changeTheme('blue')" style="flex:1; background:#2563eb; color:white; border:none; padding:10px; border-radius:5px; cursor:pointer;">Bleu</button>
+                    <button onclick="changeTheme('green')" style="flex:1; background:#16a34a; color:white; border:none; padding:10px; border-radius:5px; cursor:pointer;">Vert</button>
+                    <button onclick="changeTheme('red')" style="flex:1; background:#dc2626; color:white; border:none; padding:10px; border-radius:5px; cursor:pointer;">Rouge</button>
+                </div>
+            </div>
+
+
+            <div class="config-box box-orange">
+                <h3 style="margin-top:0; font-size: 14px;">📂 SAUVEGARDE</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <button onclick="exportData()" class="btn-action" style="background: #374151;">💾 SAUVEGARDER</button>
+                    <button onclick="document.getElementById('importFile').click()" class="btn-action" style="background: #d97706;">📥 CHARGER</button>
+                    <input type="file" id="importFile" style="display:none" accept=".json" onchange="importData(event)">
+                </div>
+            </div>
+
+
+            <div class="config-box" style="background: #e0e7ff; border-color: #a5b4fc;">
+                 <h3 style="margin-top:0; font-size: 14px;">📑 CRÉER RAYON</h3>
+                 <div style="display: flex; gap: 5px;">
+                    <input type="text" id="new-cat-name" placeholder="Nom (ex: VITRAGE)" class="input-std" style="margin:0;">
+                    <button onclick="addNewCategory()" class="btn-action" style="background: #4f46e5; width: 60px;">OK</button>
+                 </div>
+            </div>
+
+
+            <div class="config-box" style="background: #f3f4f6; border-color: #d1d5db;">
+                <h3 style="margin-top:0; font-size: 14px;">➕ AJOUTER ARTICLE</h3>
+                <select id="new-cat" class="input-std">
+                    ${Object.keys(myData).map(c => `<option value="${c}">${c}</option>`).join('')}
+                </select>
+                <input type="text" id="new-name" placeholder="Nom" class="input-std">
+                <input type="text" id="new-ref" placeholder="Référence" class="input-std">
+                <input type="number" id="new-step" placeholder="Cond. (ex: 15)" class="input-std">
+                <button onclick="addItem()" class="btn-action" style="background: var(--primary-600); width:100%;">AJOUTER L'ARTICLE</button>
+            </div>
+
+
+            <h3 style="font-size: 12px; color: #9ca3af; text-transform: uppercase;">🗑️ GESTION DU CONTENU</h3>
+            `;
+
+
+            Object.keys(myData).forEach(cat => {
+                html += `<div style="margin-bottom: 1rem; border: 1px solid #e5e7eb; border-radius: 0.5rem; overflow:hidden;">
+                    <div style="background: #f9fafb; padding: 10px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e5e7eb;">
+                        <span style="font-weight:bold; color: var(--primary-600); font-size: 14px;">${cat}</span>
+                        <button onclick="deleteCategory('${cat}')" style="font-size: 10px; background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; padding: 2px 5px; border-radius: 4px; cursor:pointer;">SUPPR. RAYON</button>
+                    </div>`;
+                myData[cat].forEach((p, index) => {
+                    html += `<div style="padding: 8px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f3f4f6; font-size: 12px; background: white;">
+                        <div style="flex:1;">
+                            <b>${p.n}</b> <span style="color:#9ca3af">(${p.r})</span>
+                            <div style="margin-top:4px;">
+                                Cond. : <input type="number" value="${p.s || 1}" onchange="updateStepInConfig('${cat}', ${index}, this.value)" class="step-input">
+                            </div>
+                        </div>
+                        <button onclick="deleteItem('${cat}', ${index})" style="color: #dc2626; border: none; background: none; font-weight:bold; cursor:pointer; font-size:18px; padding:0 10px;">×</button>
+                    </div>`;
+                });
+                html += `</div>`;
+            });
+            container.innerHTML = html;
+        }
+
+
+        function changeTheme(themeName) {
+            currentTheme = themeName;
+            document.body.setAttribute('data-theme', themeName);
+            localStorage.setItem('carro_theme', themeName);
+            showTab("CONFIG");
+        }
+
+
+        function updateStepInConfig(cat, index, newValue) {
+            let val = parseInt(newValue);
+            if (isNaN(val) || val < 1) val = 1;
+            myData[cat][index].s = val;
+            saveToStorage();
+        }
+
+
+        function addNewCategory() {
+            const name = document.getElementById('new-cat-name').value.toUpperCase().trim();
+            if(!name) return alert("Nom vide !");
+            if(myData[name]) return alert("Existe déjà !");
+            myData[name] = []; saveToStorage(); initTabs(); showTab('CONFIG');
+        }
+
+
+        function deleteCategory(cat) {
+            if(confirm(`Supprimer le rayon "${cat}" ?`)) {
+                delete myData[cat]; saveToStorage(); initTabs(); showTab('CONFIG');
+            }
+        }
+
+
+        function addItem() {
+            const cat = document.getElementById('new-cat').value;
+            const n = document.getElementById('new-name').value;
+            const r = document.getElementById('new-ref').value;
+            const s = parseInt(document.getElementById('new-step').value);
+            if(!n || !r) return alert("Nom et Réf obligatoires");
+            const newItem = { n, r };
+            if(s > 1) newItem.s = s;
+            myData[cat].push(newItem);
+            saveToStorage(); showTab("CONFIG");
+        }
+
+
+        function deleteItem(cat, index) {
+            if(confirm("Supprimer l'article ?")) {
+                myData[cat].splice(index, 1); saveToStorage(); showTab("CONFIG");
+            }
+        }
+
+
+        function renderManualForm(container) {
+            container.innerHTML = `<div class="config-box box-orange">
+                <h3 style="margin-top:0; font-size: 14px; color: var(--primary-600);">HORS-STOCK (AJOUT MANUEL)</h3>
+                <input type="text" id="m-name" placeholder="Nom" class="input-std">
+                <input type="text" id="m-ref" placeholder="Réf (optionnel)" class="input-std">
+                <input type="number" id="m-qty" placeholder="Quantité" class="input-std">
+                <button onclick="addManualItem()" class="btn-action" style="background: var(--primary-600); width:100%;">AJOUTER</button>
+            </div><div id="manual-list-display"></div>`;
+            updateManualListDisplay();
+        }
+
+
+        function addManualItem() {
+            const n = document.getElementById('m-name').value;
+            const r = document.getElementById('m-ref').value || "N/A";
+            const q = parseInt(document.getElementById('m-qty').value);
+            if(n && q > 0) { manualItems.push({ n, r, q }); showTab("MANUEL"); }
+        }
+
+
+        function updateManualListDisplay() {
+            const div = document.getElementById('manual-list-display');
+            if (!div) return;
+            manualItems.forEach((item, i) => {
+                div.innerHTML += `<div class="item-card">
+                    <span><b>${item.n}</b> (x${item.q})</span>
+                    <button onclick="manualItems.splice(${i},1);showTab('MANUEL')" style="color:red; border:none; background:none; font-weight:bold;">×</button>
+                </div>`;
+            });
+        }
+
+
+        function exportData() {
+            const blob = new Blob([JSON.stringify(myData, null, 2)], {type: "application/json"});
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = "stock_fournitures.json";
+            a.click();
+        }
+
+
+        function importData(event) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    myData = JSON.parse(e.target.result);
+                    saveToStorage(); initTabs(); alert("Liste chargée !");
+                } catch(err) { alert("Erreur fichier"); }
+            };
+            reader.readAsText(event.target.files[0]);
+        }
+
+
+        function shareOrder() {
+            const date = new Date().toLocaleDateString('fr-FR');
+            let text = `📦 *COMMANDE FOURNITURES - ${date}*\n\n`;
+            Object.keys(myData).forEach(cat => {
+                const items = myData[cat].filter(p => quantities[p.r] > 0);
+                if(items.length > 0) {
+                    text += `*[${cat}]*\n`;
+                    items.forEach(p => text += `- ${p.n} (${p.r}) : *x${quantities[p.r]}*\n`);
+                    text += `\n`;
+                }
+            });
+            if(manualItems.length > 0) {
+                text += `*[HORS-STOCK]*\n`;
+                manualItems.forEach(i => text += `- ${i.n} : *x${i.q}*\n`);
+            }
+            navigator.share ? navigator.share({text}) : navigator.clipboard.writeText(text).then(()=>alert("Copié dans le presse-papier !"));
+        }
+
+
+        function generatePrint() {
+            document.getElementById('print-date').innerText = "Le " + new Date().toLocaleDateString('fr-FR');
+            const pc = document.getElementById('print-content');
+            pc.innerHTML = "";
+            let empty = true;
+
+
+            const createTable = (title, items, isPreset) => {
+                let h = `<div class="category-block"><div style="background:#000; color:white; font-weight:bold; font-size:10pt; padding:3px 8px;">${title}</div><table><thead><tr><th>Article</th><th>Référence</th><th style="text-align:center">Qté</th></tr></thead><tbody>`;
+                items.forEach(p => {
+                    const q = isPreset ? quantities[p.r] : p.q;
+                    h += `<tr><td style="font-weight:bold">${p.n}</td><td style="color:var(--primary-600); font-family:monospace; font-weight:bold;">${p.r}</td><td class="qty-cell">${q}</td></tr>`;
+                });
+                return h + `</tbody></table></div>`;
+            }
+
+
+            Object.keys(myData).forEach(cat => {
+                const items = myData[cat].filter(p => quantities[p.r] > 0);
+                if(items.length > 0) { empty = false; pc.innerHTML += createTable(cat, items, true); }
+            });
+            if(manualItems.length > 0) { empty = false; pc.innerHTML += createTable("HORS STOCK", manualItems, false); }
+
+
+            if(!empty) window.print(); else alert("Commande vide !");
+        }
+
+
+        function resetAll() { if(confirm("Vider la commande ?")) { quantities = {}; manualItems = []; showTab(currentTab); } }
+
+
+        initTabs();
+    </script>
+</body>
+</html></template>
+<template id="app-code-1">﻿<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PPG PSA Manager - Version Corrigée</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #34495e;
+            --success: #27ae60;
+            --danger: #e74c3c;
+            --bg: #f8f9fa;
+            --text: #333;
+        }
+
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+
+        nav {
+            background: var(--primary);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+
+        nav button {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.6);
+            font-weight: bold;
+            font-size: 14px;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+
+        nav button.active {
+            color: white;
+            border-bottom: 2px solid white;
+        }
+
+
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            display: none;
+        }
+
+
+        .content.active { display: block; }
+
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+
+        .search-box {
+            position: sticky;
+            top: 0;
+            background: var(--bg);
+            z-index: 10;
+            padding-bottom: 10px;
+        }
+
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+
+        #searchResults {
+            list-style: none;
+            padding: 0;
+            margin: 5px 0;
+            background: white;
+            border-radius: 6px;
+            max-height: 250px;
+            overflow-y: auto;
+            border: 1px solid #eee;
+            display: none;
+        }
+
+
+        #searchResults li {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; font-size: 11px; color: #777; padding-bottom: 10px; text-transform: uppercase; }
+        td { padding: 10px 0; border-bottom: 1px solid #eee; }
+
+
+        .ppg-code { color: #555; font-weight: bold; }
+        .psa-code { font-family: monospace; color: var(--danger); font-weight: bold; font-size: 12px; }
+
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 14px;
+            width: 100%;
+            margin-bottom: 8px;
+        }
+
+
+        .btn-main { background: var(--primary); color: white; }
+        .btn-success { background: var(--success); color: white; }
+        .btn-outline { background: white; border: 1px solid #ddd; color: var(--text); }
+        .btn-small-del { background: #fee2e2; color: #dc2626; padding: 5px 10px; font-size: 10px; border-radius: 4px; width: auto; border: 1px solid #fecaca; }
+
+
+        .qty-controls { display: flex; align-items: center; gap: 10px; }
+        .qty-btn { width: 32px; height: 32px; border: 1px solid #ddd; background: white; border-radius: 4px; font-weight: bold; }
+
+
+        @media print {
+            nav, .no-print, .search-box, .qty-btn { display: none !important; }
+            body { background: white; }
+            .card { box-shadow: none; border: none; padding: 0; }
+        }
+    </style>
+</head>
+<body>
+
+
+        <nav class="no-print">
+        <button id="tabOrderBtn" class="active" onclick="showTab('order')">COMMANDE</button>
+        <button id="tabHistoryBtn" onclick="showTab('history')">HISTORIQUE</button> <button id="tabSettingsBtn" onclick="showTab('settings')">PARAMÈTRES</button>
+    </nav>
+
+
+    <div id="historyTab" class="content">
+        <div class="card">
+            <h3 style="margin:0 0 15px 0">Commandes Enregistrées</h3>
+            <div id="historyList">
+                <p style="color:gray; font-size:14px;">Aucune commande en archive.</p>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div id="orderTab" class="content active">
+        <div class="search-box no-print">
+            <input type="text" id="searchInput" placeholder="Chercher PPG ou Nom..." oninput="handleSearch()">
+            <ul id="searchResults"></ul>
+        </div>
+
+
+        <div class="card">
+            <h3 style="margin:0 0 15px 0">Bon de Commande</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Désignation & Références</th>
+                        <th style="width:100px; text-align:right">Quantité</th>
+                    </tr>
+                </thead>
+                <tbody id="orderBody"></tbody>
+            </table>
+        </div>
+
+
+        <div class="no-print">
+            <button class="btn btn-main" onclick="window.print()">🖨️ Imprimer / PDF</button>
+            <button class="btn btn-success" onclick="shareOrder()">📤 Partager la commande</button>
+        </div>
+    </div>
+
+
+    <div id="settingsTab" class="content">
+        <div class="card">
+            <h4>📥 Import / Export</h4>
+            <button class="btn btn-outline" onclick="exportCatalogue()">Exporter le catalogue (JSON)</button>
+            <button class="btn btn-outline" onclick="document.getElementById('importInput').click()">Importer un catalogue (JSON)</button>
+            <input type="file" id="importInput" style="display:none" onchange="importCatalogue(event)">
+            <button class="btn btn-small-del" style="margin-top:10px" onclick="clearCatalogue()">⚠️ Effacer tout le catalogue</button>
+        </div>
+
+
+        <div class="card">
+            <h4>➕ Ajouter un produit</h4>
+            <input type="text" id="addNom" placeholder="Nom du produit">
+            <input type="text" id="addPpg" placeholder="Référence PPG">
+            <input type="text" id="addPsa" placeholder="Référence PSA">
+            <button class="btn btn-main" onclick="addProduct()">Enregistrer</button>
+        </div>
+
+
+        <div class="card">
+            <h4>📦 Gestion du Catalogue (<span id="countDisplay">0</span>)</h4>
+            <div style="max-height: 300px; overflow-y: auto; border: 1px solid #eee; border-radius: 4px;">
+                <table style="font-size: 12px;">
+                    <tbody id="catalogueList"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+<script>
+    let catalogue = JSON.parse(localStorage.getItem('ppg_data')) || [];
+    let basket = {};
+
+        let history = JSON.parse(localStorage.getItem('ppg_history')) || [];
+
+
+    function saveOrderToHistory() {
+        if (Object.keys(basket).length === 0) {
+            alert("Le panier est vide !");
+            return;
+        }
+
+        const newOrder = {
+            id: Date.now(),
+            date: new Date().toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+            items: JSON.parse(JSON.stringify(basket)) // Copie du panier
+        };
+
+        history.unshift(newOrder); // Ajoute au début de la liste
+        localStorage.setItem('ppg_history', JSON.stringify(history));
+        alert("Commande enregistrée dans l'historique !");
+        renderHistory();
+    }
+
+
+    function save() { 
+        localStorage.setItem('ppg_data', JSON.stringify(catalogue)); 
+        renderCatalogueManagement(); 
+    }
+
+
+        function showTab(tab) {
+        document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+        document.getElementById(tab + 'Tab').classList.add('active');
+        document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1) + 'Btn').classList.add('active');
+        
+        if(tab === 'settings') renderCatalogueManagement();
+        // C'est cette ligne qui manquait pour "réveiller" l'historique :
+        if(tab === 'history') renderHistory(); 
+    }
+
+
+
+    function handleSearch() {
+        const q = document.getElementById('searchInput').value.toUpperCase();
+        const res = document.getElementById('searchResults');
+        if(q.length < 1) { res.style.display = 'none'; return; }
+        
+        // Modification ici : on cherche dans 'ppg' OU 'ref_ppg'
+        const hits = catalogue.filter(i => {
+            const ppgVal = (i.ppg || i.ref_ppg || "").toUpperCase();
+            const nomVal = (i.nom || "").toUpperCase();
+            return ppgVal.includes(q) || nomVal.includes(q);
+        }).slice(0, 15);
+
+
+        res.innerHTML = hits.map(i => {
+            const displayPpg = i.ppg || i.ref_ppg;
+            const displayPsa = i.psa || i.ref_psa;
+            return `
+                <li onclick="addToBasket('${displayPpg}')">
+                    <div>
+                        <span class="ppg-code">${displayPpg}</span><br>
+                        <small>${i.nom}</small>
+                    </div>
+                    <span class="psa-code">${displayPsa}</span>
+                </li>
+            `;
+        }).join('');
+        res.style.display = hits.length ? 'block' : 'none';
+    }
+
+
+    function addToBasket(ppgCode) {
+        const item = catalogue.find(i => (i.ppg === ppgCode || i.ref_ppg === ppgCode));
+        if(!item) return;
+
+
+        const ppg = item.ppg || item.ref_ppg;
+        const psa = item.psa || item.ref_psa;
+
+
+        if(basket[ppg]) {
+            basket[ppg].qty++;
+        } else {
+            basket[ppg] = {
+                nom: item.nom,
+                ppg: ppg,
+                psa: psa,
+                qty: 1
+            };
+        }
+        document.getElementById('searchInput').value = '';
+        document.getElementById('searchResults').style.display = 'none';
+        renderOrder();
+    }
+
+
+    function updateQty(ppg, delta) {
+        basket[ppg].qty += delta;
+        if(basket[ppg].qty <= 0) delete basket[ppg];
+        renderOrder();
+    }
+
+
+        function renderOrder() {
+        const body = document.getElementById('orderBody');
+        const today = new Date().toLocaleDateString('fr-FR');
+        
+        // Affiche la date auto dans le titre
+        document.querySelector('#orderTab h3').innerHTML = `Bon de Commande - Le ${today}`;
+
+        body.innerHTML = Object.keys(basket).map(ppg => {
+            const i = basket[ppg];
+            return `
+                <tr>
+                    <td>
+                        <strong>${i.nom}</strong><br>
+                        <span style="font-size:13px">PPG: <b>${i.ppg}</b></span><br>
+                        <span class="psa-code">PSA: ${i.psa}</span>
+                    </td>
+                    <td align="right">
+                        <div class="qty-controls">
+                            <button class="qty-btn no-print" onclick="updateQty('${ppg}', -1)">-</button>
+                            <span><b>${i.qty}</b></span>
+                            <button class="qty-btn no-print" onclick="updateQty('${ppg}', 1)">+</button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+
+        // Affiche le bouton de sauvegarde seulement si le panier n'est pas vide
+        if (Object.keys(basket).length > 0) {
+            body.innerHTML += `
+                <tr class="no-print">
+                    <td colspan="2" style="padding-top:20px">
+                        <button class="btn btn-success" onclick="saveOrderToHistory()">💾 Enregistrer la commande</button>
+                    </td>
+                </tr>`;
+        }
+    }
+
+
+
+    function renderCatalogueManagement() {
+        const body = document.getElementById('catalogueList');
+        const count = document.getElementById('countDisplay');
+        count.innerText = catalogue.length;
+        body.innerHTML = catalogue.map((item, index) => {
+            const p = item.ppg || item.ref_ppg;
+            return `
+                <tr>
+                    <td style="padding:8px">
+                        <b>${p}</b><br>${item.nom}
+                    </td>
+                    <td align="right" style="padding:8px">
+                        <button class="btn-small-del" onclick="deleteProduct(${index})">Suppr.</button>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+
+    function deleteProduct(index) {
+        if(confirm("Supprimer ce produit du catalogue ?")) {
+            catalogue.splice(index, 1);
+            save();
+        }
+    }
+
+
+    function clearCatalogue() {
+        if(confirm("Êtes-vous sûr de vouloir TOUT supprimer ? Cette action est irréversible.")) {
+            catalogue = [];
+            save();
+            alert("Catalogue vidé.");
+        }
+    }
+
+
+    function addProduct() {
+        const nom = document.getElementById('addNom').value.toUpperCase();
+        const ppg = document.getElementById('addPpg').value.toUpperCase();
+        const psa = document.getElementById('addPsa').value;
+        if(nom && ppg && psa) {
+            catalogue.push({nom, ppg, psa});
+            save();
+            document.getElementById('addNom').value = '';
+            document.getElementById('addPpg').value = '';
+            document.getElementById('addPsa').value = '';
+            alert("Produit ajouté !");
+        }
+    }
+
+
+    function shareOrder() {
+        let text = "*COMMANDE PPG PSA*\n\n";
+        let hasItems = false;
+        for(let key in basket) {
+            hasItems = true;
+            text += `*${basket[key].nom}*\nPPG: ${basket[key].ppg}\nPSA: ${basket[key].psa}\nQté: ${basket[key].qty}\n\n`;
+        }
+        if(!hasItems) { alert("Le panier est vide !"); return; }
+
+
+        if (navigator.share) {
+            navigator.share({ title: 'Commande', text: text });
+        } else {
+            navigator.clipboard.writeText(text);
+            alert("Copié dans le presse-papier !");
+        }
+    }
+
+
+    function exportCatalogue() {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(catalogue));
+        const dl = document.createElement('a');
+        dl.setAttribute("href", dataStr);
+        dl.setAttribute("download", "catalogue_ppg.json");
+        dl.click();
+    }
+
+
+    function importCatalogue(event) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const data = JSON.parse(e.target.result);
+                // On fusionne l'ancien et le nouveau catalogue au lieu de tout écraser
+                if(confirm("Voulez-vous AJOUTER ces produits à votre liste actuelle ? (Annuler pour remplacer tout le catalogue)")) {
+                    catalogue = catalogue.concat(data);
+                } else {
+                    catalogue = data;
+                }
+                save();
+                alert("Importation réussie !");
+            } catch(err) {
+                alert("Erreur : Le fichier JSON n'est pas valide.");
+            }
+        };
+        reader.readAsText(event.target.files[0]);
+    }
+
+
+    function renderHistory() {
+        const container = document.getElementById('historyList');
+        if (history.length === 0) {
+            container.innerHTML = '<p style="color:gray; font-size:14px;">Aucune commande en archive.</p>';
+            return;
+        }
+
+        container.innerHTML = history.map((order, index) => `
+            <div class="card" style="border-left: 4px solid var(--success); margin-bottom:10px;">
+                <div style="display:flex; justify-content:space-between; align-items:start;">
+                    <small><b>Le ${order.date}</b></small>
+                    <button class="btn-small-del" onclick="deleteHistory(${index})">Effacer</button>
+                </div>
+                <ul style="font-size:12px; padding-left:20px; margin:10px 0;">
+                    ${Object.values(order.items).map(i => `<li>${i.nom} (x${i.qty})</li>`).join('')}
+                </ul>
+            </div>
+        `).join('');
+    }
+
+    function deleteHistory(index) {
+        if(confirm("Supprimer cette archive ?")) {
+            history.splice(index, 1);
+            localStorage.setItem('ppg_history', JSON.stringify(history));
+            renderHistory();
+        }
+    }
+
+
+    renderCatalogueManagement();
+</script>
+</body>
+</html></template>
+
+    <div id="login"><div class="card"><h2>ACCÈS SÉCURISÉ</h2><input type="text" id="ui" placeholder="Utilisateur"><input type="password" id="pi" placeholder="Mot de passe"><button onclick="check()" class="btn-menu">CONNEXION</button></div></div>
+    <div id="menu"><h1>MASTER GARAGE</h1><button class="btn-menu" onclick="showApp(0)">Consommable </button>
+<button class="btn-menu" onclick="showApp(1)">Peinture </button>
+</div>
+    <div id="view"><nav><button onclick="back()" class="btn-back">🏠 MENU</button></nav><iframe id="f"></iframe></div>
+
+    <script>
+        const USERS = [{"u":"garage","p":"1234"}];
+        const USE_SEC = false;
+
+        function check() {
+            const u = document.getElementById('ui').value;
+            const p = document.getElementById('pi').value;
+            const found = USERS.find(user => user.u === u && user.p === p);
+            if(found) {
+                document.getElementById('login').style.display = 'none';
+                document.getElementById('menu').style.display = 'flex';
+                sessionStorage.setItem('ga_auth', '1');
+            } else alert("Erreur identifiants");
+        }
+
+        if(!USE_SEC || sessionStorage.getItem('ga_auth') === '1') {
+            document.getElementById('login').style.display = 'none';
+            document.getElementById('menu').style.display = 'flex';
+        }
+
+        function showApp(id) {
+            document.getElementById('menu').style.display = 'none';
+            document.getElementById('view').style.display = 'flex';
+            document.getElementById('f').srcdoc = document.getElementById('app-code-' + id).innerHTML;
+        }
+
+        function back() {
+            document.getElementById('view').style.display = 'none';
+            document.getElementById('menu').style.display = 'flex';
+            document.getElementById('f').srcdoc = '';
+        }
+    </script>
+</body>
+</html>
