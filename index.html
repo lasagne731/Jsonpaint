@@ -447,7 +447,7 @@
                 let h = `<div class="category-block"><div style="background:#000; color:white; font-weight:bold; font-size:10pt; padding:3px 8px;">${title}</div><table><thead><tr><th>Article</th><th>Référence</th><th style="text-align:center">Qté</th></tr></thead><tbody>`;
                 items.forEach(p => {
                     const q = isPreset ? quantities[p.r] : p.q;
-                    h += `<tr><td style="font-weight:bold">${p.n}</td><td style="color:var(--primary-600); font-family:monospace; font-weight:bold;">${p.r}</td><td class="qty-cell">${q}</td></tr>`;
+                    h += `<tr><td style="font-weight:bold; color:black;">${p.n}</td><td style="color:black; font-family:monospace; font-weight:bold;">${p.r}</td><td class="qty-cell" style="color:black;">${q}</td></tr>`;
                 });
                 return h + `</tbody></table></div>`;
             }
@@ -589,12 +589,12 @@
 
 
         table { width: 100%; border-collapse: collapse; }
-        th { text-align: left; font-size: 11px; color: #777; padding-bottom: 10px; text-transform: uppercase; }
+        th { text-align: left; font-size: 11px; colonr: #777; padding-bottom: 10px; text-transform: uppercase; }
         td { padding: 10px 0; border-bottom: 1px solid #eee; }
 
 
         .ppg-code { color: #555; font-weight: bold; }
-        .psa-code { font-family: monospace; color: var(--danger); font-weight: bold; font-size: 12px; }
+                .psa-code { font-family: monospace; color: black; font-weight: bold; font-size: 12px; }
 
 
         .btn {
