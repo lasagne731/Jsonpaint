@@ -958,23 +958,27 @@
 
     function renderHistory() {
         const container = document.getElementById('historyList');
-        if (history.length === 0) {
+        if (!history || history.length === 0) {
             container.innerHTML = '<p style="color:gray; font-size:14px;">Aucune commande en archive.</p>';
             return;
         }
-
         container.innerHTML = history.map((order, index) => `
-            <div class="card" style="border-left: 4px solid var(--success); margin-bottom:10px;">
-                <div style="display:flex; justify-content:space-between; align-items:start;">
-                    <small><b>Le ${order.date}</b></small>
-                    <button class="btn-small-del" onclick="deleteHistory(${index})">Effacer</button>
+            <div class="card" style="border-left: 5px solid var(--primary); border-top: 1px solid #ddd; margin-bottom:15px; background: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.05); padding:15px;">
+                <div style="background:#f8f9fa; margin:-15px -15px 10px -15px; padding:10px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
+                    <span style="color:var(--primary); font-weight:bold; font-size:14px;">📁 Commande du ${order.date}</span>
+                    <button class="btn-small-del" onclick="deleteHistory(${index})" style="background:#fee2e2; color:#dc2626; border:1px solid #fecaca; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer;">Supprimer</button>
                 </div>
                 <ul style="font-size:12px; padding-left:20px; margin:10px 0;">
-                    ${Object.values(order.items).map(i => `<li>${i.nom} (x${i.qty})</li>`).join('')}
+                    ${Object.values(order.items).map(i => `
+                        <li style="margin-bottom:8px;">
+                            <b>${i.nom}</b> (x${i.qty})<br>
+                            <small style="color:#666;">PPG: ${i.ppg || 'N/A'} | PSA: ${i.psa || 'N/A'}</small>
+                        </li>`).join('')}
                 </ul>
             </div>
         `).join('');
     }
+
 
     function deleteHistory(index) {
         if(confirm("Supprimer cette archive ?")) {
