@@ -966,18 +966,33 @@
             <div class="card" style="border-left: 5px solid var(--primary); border-top: 1px solid #ddd; margin-bottom:15px; background: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.05); padding:15px;">
                 <div style="background:#f8f9fa; margin:-15px -15px 10px -15px; padding:10px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
                     <span style="color:var(--primary); font-weight:bold; font-size:14px;">📁 Commande du ${order.date}</span>
-                    <button class="btn-small-del" onclick="deleteHistory(${index})" style="background:#fee2e2; color:#dc2626; border:1px solid #fecaca; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer;">Supprimer</button>
+                    <div style="display:flex; gap:5px;">
+                        <button onclick="restoreOrder(${index})" style="background:#e0f2fe; color:#0369a1; border:1px solid #bae6fd; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer;">🔄 Charger</button>
+                        <button class="btn-small-del" onclick="deleteHistory(${index})">Suppr.</button>
+                    </div>
                 </div>
                 <ul style="font-size:12px; padding-left:20px; margin:10px 0;">
-                    ${Object.values(order.items).map(i => `
-                        <li style="margin-bottom:8px;">
-                            <b>${i.nom}</b> (x${i.qty})<br>
-                            <small style="color:#666;">PPG: ${i.ppg || 'N/A'} | PSA: ${i.psa || 'N/A'}</small>
-                        </li>`).join('')}
+                    ${Object.values(order.items).map(i => `<li><b>${i.nom}</b> (x${i.qty})</li>`).join('')}
                 </ul>
             </div>
         `).join('');
     }
+
+        function restoreOrder(index) {
+        if(confirm("Cela va remplacer votre panier actuel par cette ancienne commande. Continuer ?")) {
+            // On copie les articles de l'archive vers le panier actif
+            basket = JSON.parse(JSON.stringify(history[index].items));
+            
+            // On affiche l'onglet "COMMANDE"
+            showTab('order');
+            
+            // On rafraîchit l'affichage du panier
+            renderOrder();
+            
+            alert("Commande restaurée ! Vous pouvez maintenant l'imprimer ou la modifier.");
+        }
+    }
+
 
 
     function deleteHistory(index) {
