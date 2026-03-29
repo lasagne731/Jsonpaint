@@ -681,6 +681,21 @@
     <div id="settingsTab" class="content">
         <div class="card">
             <h4>📥 Import / Export</h4>
+            <div style="background: #fff9db; border: 1px solid #f59e0b; padding: 12px; border-radius: 8px; margin-bottom: 15px; font-size: 13px; color: #92400e;">
+    <strong style="display: block; margin-bottom: 5px;">⚠️ ATTENTION : PERTE DE DONNÉES</strong>
+    Si vous effacez l'historique de votre navigateur, votre catalogue et votre historique seront <b>supprimés définitivement</b>.
+    <br><br>
+    <strong>💡 Procédure de sauvegarde :</strong>
+    <ol style="margin-top: 5px; padding-left: 20px;">
+        <li>Cliquez sur <b>"Exporter le catalogue"</b> régulièrement.</li>
+        <li>Enregistrez le fichier .json sur votre <b>Google Drive</b>.</li>
+        <li>En cas de perte, utilisez <b>"Importer un catalogue"</b> pour tout restaurer.</li>
+    </ol>
+    <a href="https://drive.google.com/drive/folders/1DxhVmuVXnwbktRAbmOE07BJPE1qjAwIT" target="_blank" style="display: inline-block; margin-top: 10px; color: #2563eb; font-weight: bold; text-decoration: underline;">
+        📁 Accéder à mon dossier Drive de secours
+    </a>
+</div>
+
             <button class="btn btn-outline" onclick="exportCatalogue()">Exporter le catalogue (JSON)</button>
             <button class="btn btn-outline" onclick="document.getElementById('importInput').click()">Importer un catalogue (JSON)</button>
             <input type="file" id="importInput" style="display:none" onchange="importCatalogue(event)">
