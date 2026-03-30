@@ -690,49 +690,33 @@
     </div>
 
 
-    <div id="settingsTab" class="content">
-        <div class="card">
-            <h4>📥 Import / Export</h4>
-            <div style="background: #fff9db; border: 1px solid #f59e0b; padding: 12px; border-radius: 8px; margin-bottom: 15px; font-size: 13px; color: #92400e;">
-    <strong style="display: block; margin-bottom: 5px;">⚠️ ATTENTION : PERTE DE DONNÉES</strong>
-    Si vous effacez l'historique de votre navigateur, votre catalogue et votre historique seront <b>supprimés définitivement</b>.
-    <br><br>
-    <strong>💡 Procédure de sauvegarde :</strong>
-    <ol style="margin-top: 5px; padding-left: 20px;">
-        <li>Cliquez sur <b>"Exporter le catalogue"</b> régulièrement.</li>
-        <li>Enregistrez le fichier .json sur votre <b>Google Drive</b>.</li>
-        <li>En cas de perte, utilisez <b>"Importer un catalogue"</b> pour tout restaurer.</li>
-    </ol>
-    <a href="https://drive.google.com/drive/folders/1DxhVmuVXnwbktRAbmOE07BJPE1qjAwIT" target="_blank" style="display: inline-block; margin-top: 10px; color: #2563eb; font-weight: bold; text-decoration: underline;">
-        📁 Accéder à mon dossier Drive de secours
-    </a>
+<div id="settingsTab" class="content">
+    <div class="card">
+        <h4>📥 Import / Export</h4>
+        <div style="background: #fff9db; border: 1px solid #f59e0b; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 13px; color: #92400e; line-height: 1.5;">
+            <strong style="display: block; margin-bottom: 5px; font-size: 14px;">⚠️ SÉCURITÉ DU CATALOGUE</strong>
+            Les données sont stockées uniquement dans ce navigateur. Un nettoyage de l'historique ou du cache effacera tout définitivement.
+            <br><br>
+            <strong>📦 Procédure de sauvegarde :</strong>
+            <ul style="margin-top: 5px; padding-left: 20px;">
+                <li>Cliquez sur <b>"Exporter le catalogue"</b> régulièrement pour créer un fichier de secours.</li>
+                <li>Enregistrez ce fichier sur votre <b>Google Drive</b> ou sur une clé USB.</li>
+                <li>En cas de perte, utilisez <b>"Importer un catalogue"</b> pour restaurer vos produits.</li>
+            </ul>
+            <a href="https://drive.google.com/drive/folders/1DxhVmuVXnwbktRAbmOE07BJPE1qjAwIT" target="_blank" style="display: inline-block; margin-top: 10px; color: #2563eb; font-weight: bold; text-decoration: underline;">
+                📁 Accéder à mon dossier Drive de secours
+            </a>
+        </div>
+
+        <button class="btn btn-outline" onclick="exportCatalogue()">Exporter le catalogue (JSON)</button>
+        <button class="btn btn-outline" onclick="document.getElementById('importInput').click()">Importer un catalogue (JSON)</button>
+        
+        <input type="file" id="importInput" style="display:none" onchange="importCatalogue(event)">
+        
+        <button class="btn btn-small-del" style="margin-top:10px" onclick="clearCatalogue()">⚠️ Effacer tout le catalogue</button>
+    </div>
 </div>
 
-            <button class="btn btn-outline" onclick="exportCatalogue()">Exporter le catalogue (JSON)</button>
-            <button class="btn btn-outline" onclick="document.getElementById('importInput').click()">Importer un catalogue (JSON)</button>
-            <input type="file" id="importInput" style="display:none" onchange="importCatalogue(event)">
-            <button class="btn btn-small-del" style="margin-top:10px" onclick="clearCatalogue()">⚠️ Effacer tout le catalogue</button>
-        </div>
-
-
-        <div class="card">
-            <h4>➕ Ajouter un produit</h4>
-            <input type="text" id="addNom" placeholder="Nom du produit">
-            <input type="text" id="addPpg" placeholder="Référence PPG">
-            <input type="text" id="addPsa" placeholder="Référence PSA">
-            <button class="btn btn-main" onclick="addProduct()">Enregistrer</button>
-        </div>
-
-
-        <div class="card">
-            <h4>📦 Gestion du Catalogue (<span id="countDisplay">0</span>)</h4>
-            <div style="max-height: 300px; overflow-y: auto; border: 1px solid #eee; border-radius: 4px;">
-                <table style="font-size: 12px;">
-                    <tbody id="catalogueList"></tbody>
-                </table>
-            </div>
-        </div>
-    </div>
 
 
 <script>
