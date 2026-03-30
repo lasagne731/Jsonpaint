@@ -241,22 +241,25 @@
             showTab(currentTab);
         }
 
-        function renderConfig(container) {
-            let html = `
-            <div style="background: #fff9db; border: 1px solid #f59e0b; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 13px; color: #92400e; line-height: 1.5;">
-                <strong style="display: block; margin-bottom: 5px; font-size: 14px;">⚠️ SÉCURITÉ DU CATALOGUE</strong>
-                Les données sont stockées uniquement dans ce navigateur. Un nettoyage de l'historique ou du cache effacera tout définitivement.
-                <br><br>
-                <strong>📦 Procédure de sauvegarde :</strong>
-                <ul style="margin-top: 5px; padding-left: 20px;">
-                    <li><b>Sauvegarder</b> le catalogue après chaque modification importante dans un dossier sécurisé dans un dossier local ou sur clé USB./li>
-                    <li>En cas de perte, utilisez <b>"CHARGER"</b> pour restaurer votre fichier.</li>
-                </ul>
-            </div>
 
-            <div class="config-box box-orange" style="border-color: #6b7280; background: #fff;">
-                <h3 style="margin-top:0; font-size: 14px; border-bottom: 1px solid #ddd; padding-bottom: 5px;">🎨 CHOIX DU THÈME</h3>
+            function renderConfig(container) {
+        let html = `
+        <div style="background: #fff9db; border: 1px solid #f59e0b; padding: 12px; border-radius: 8px; margin-bottom: 15px; font-size: 13px; color: #92400e;">
+            <strong style="display: block; margin-bottom: 5px;">⚠️ ATTENTION : PERTE DE DONNÉES</strong>
+            Si vous effacez l'historique du navigateur, vos rayons et quantités seront <b>supprimés</b>.
+            <br><br>
+            <strong>💡 Sauvegarde :</strong>
+            <ul style="margin-top: 5px; padding-left: 20px;">
+                <li>Faites <b>"SAUVEGARDER"</b> régulièrement.</li>
+                <li>Mettez le fichier .json sur votre <b>Drive</b>.</li>
+            </ul>
+            <a href="https://drive.google.com/drive/folders/1DxhVmuVXnwbktRAbmOE07BJPE1qjAwIT" target="_blank" style="display: inline-block; margin-top: 10px; color: #2563eb; font-weight: bold; text-decoration: underline;">
+                📁 Accéder à mon dossier Drive
+            </a>
+        </div>
 
+        <div class="config-box box-orange" style="border-color: #6b7280; background: #fff;">
+            <h3 style="margin-top:0; font-size: 14px; border-bottom: 1px solid #ddd; padding-bottom: 5px;">🎨 CHOIX DU THÈME</h3>
 
                 <div style="display: flex; gap: 10px; margin-top: 10px;">
                     <button onclick="changeTheme('orange')" style="flex:1; background:#ea580c; color:white; border:none; padding:10px; border-radius:5px; cursor:pointer;">Orange</button>
