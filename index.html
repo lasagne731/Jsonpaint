@@ -638,11 +638,14 @@
         .qty-btn { width: 32px; height: 32px; border: 1px solid #ddd; background: white; border-radius: 4px; font-weight: bold; }
 
 
-        @media print {
+                @media print {
             nav, .no-print, .search-box, .qty-btn { display: none !important; }
-            body { background: white; }
+            body { background: white; display: block; height: auto; }
+            .content { display: block; overflow: visible; height: auto; }
             .card { box-shadow: none; border: none; padding: 0; }
+            tr { break-inside: avoid; page-break-inside: avoid; }
         }
+
     </style>
 </head>
 <body>
