@@ -123,6 +123,7 @@
             .qty-cell { text-align: center; font-weight: bold; background: #f9f9f9; width: 40px; border-left: 1px solid #ccc; }
         }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body data-theme="orange">
 
@@ -447,23 +448,76 @@ function updateManualListDisplay() {
         }
 
 
-        function shareOrder() {
-            const date = new Date().toLocaleDateString('fr-FR');
-            let text = `📦 *COMMANDE FOURNITURES - ${date}*\n\n`;
+                async function shareOrder() {
+            // 1. On prépare la mise en page (comme pour le bouton d'impression classique)
+            document.getElementById('print-date').innerText = "Le " + new Date().toLocaleDateString('fr-FR');
+            const pc = document.getElementById('print-content');
+            pc.innerHTML = "";
+            let empty = true;
+
+            const createTable = (title, items, isPreset) => {
+                let h = `<div style="margin-bottom: 15px; border: 1px solid #000; page-break-inside: avoid;"><div style="background:#000; color:white; font-weight:bold; font-size:10pt; padding:3px 8px;">${title}</div><table style="width: 100%; border-collapse: collapse;"><thead><tr><th style="background: #f0f0f0; font-size: 8pt; padding: 4px; border-bottom: 1px solid #000; text-align: left;">Article</th><th style="background: #f0f0f0; font-size: 8pt; padding: 4px; border-bottom: 1px solid #000; text-align: left;">Référence</th><th style="background: #f0f0f0; font-size: 8pt; padding: 4px; border-bottom: 1px solid #000; text-align: center;">Qté</th></tr></thead><tbody>`;
+                items.forEach(p => {
+                    const q = isPreset ? quantities[p.r] : p.q;
+                    h += `<tr><td style="font-size: 9pt; padding: 5px; border-bottom: 1px solid #ddd; font-weight:bold;">${p.n}</td><td style="font-size: 9pt; padding: 5px; border-bottom: 1px solid #ddd; font-family:monospace; font-weight:bold;">${p.r}</td><td style="font-size: 9pt; padding: 5px; border-bottom: 1px solid #ddd; text-align: center; font-weight: bold; background: #f9f9f9; width: 40px; border-left: 1px solid #ccc;">${q}</td></tr>`;
+                });
+                return h + `</tbody></table></div>`;
+            }
+
             Object.keys(myData).forEach(cat => {
                 const items = myData[cat].filter(p => quantities[p.r] > 0);
-                if(items.length > 0) {
-                    text += `*[${cat}]*\n`;
-                    items.forEach(p => text += `- ${p.n} (${p.r}) : *x${quantities[p.r]}*\n`);
-                    text += `\n`;
-                }
+                if(items.length > 0) { empty = false; pc.innerHTML += createTable(cat, items, true); }
             });
-            if(manualItems.length > 0) {
-                text += `*[HORS-STOCK]*\n`;
-                manualItems.forEach(i => text += `- ${i.n} : *x${i.q}*\n`);
+            if(manualItems.length > 0) { empty = false; pc.innerHTML += createTable("HORS STOCK", manualItems, false); }
+
+            if(empty) return alert("Commande vide !");
+
+            // 2. On affiche temporairement la zone pour que le PDF se génère avec les bonnes couleurs
+            const printZone = document.getElementById('print-zone');
+            printZone.classList.remove('print-only');
+            printZone.style.display = 'block';
+
+            // 3. Configuration du PDF
+            const opt = {
+                margin:       10,
+                filename:     'Commande_Consommables.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            try {
+                // 4. L'outil génère le vrai fichier PDF
+                const pdfBlob = await html2pdf().set(opt).from(printZone).output('blob');
+                
+                // On recache la zone d'impression une fois fini
+                printZone.style.display = '';
+                printZone.classList.add('print-only');
+
+                // 5. On emballe le PDF et on ouvre le menu de partage de ton téléphone
+                const file = new File([pdfBlob], 'Commande_Consommables.pdf', { type: 'application/pdf' });
+                
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                    await navigator.share({
+                        files: [file],
+                        title: 'Bon de Commande',
+                        text: 'Voici la commande au format PDF.'
+                    });
+                } else {
+                    // Si le téléphone bloque le partage direct, ça télécharge simplement le fichier
+                    const url = URL.createObjectURL(pdfBlob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'Commande_Consommables.pdf';
+                    a.click();
+                }
+            } catch (err) {
+                printZone.style.display = '';
+                printZone.classList.add('print-only');
+                alert("Erreur lors de la création du PDF.");
             }
-            navigator.share ? navigator.share({text}) : navigator.clipboard.writeText(text).then(()=>alert("Copié dans le presse-papier !"));
         }
+
 
 
         function generatePrint() {
