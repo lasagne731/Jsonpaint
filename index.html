@@ -110,9 +110,10 @@
         .step-input { width: 50px; padding: 2px; text-align: center; border: 1px solid #ccc; border-radius: 4px; font-weight: bold; }
         
         
-        /* --- STYLE SPÉCIAL PARTAGE PDF --- */
-        #print-zone.pdf-mode { display: block !important; background: white; color: black; padding: 20px; }
-        #print-zone.pdf-mode .print-grid { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 20px !important; }
+                /* --- STYLE SPÉCIAL PARTAGE PDF --- */
+        #print-zone.pdf-mode { display: block !important; background: white; color: black; padding: 20px; box-sizing: border-box; }
+        #print-zone.pdf-mode > * { max-width: 720px; margin-left: auto; margin-right: auto; }
+        #print-zone.pdf-mode .print-grid { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 20px !important; justify-content: center; }
         #print-zone.pdf-mode .category-block { break-inside: avoid; margin-bottom: 15px; border: 1px solid #000; }
         #print-zone.pdf-mode table { width: 100%; border-collapse: collapse; }
         #print-zone.pdf-mode th { background: #000 !important; color: white !important; font-size: 8pt; padding: 4px; border-bottom: 1px solid #000; text-align: left; }
