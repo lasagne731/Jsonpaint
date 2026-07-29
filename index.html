@@ -503,8 +503,8 @@ async function shareOrder() {
         jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
 
-    try {
-        const pdfBlob = await html2pdf().set(opt).from(printZone).output('blob');
+        try {
+        const pdfBlob = await html2pdf().from(printZone).set(opt).output('blob');
 
         printZone.classList.remove('pdf-mode');
         printZone.classList.add('print-only');
@@ -527,9 +527,9 @@ async function shareOrder() {
     } catch (err) {
         printZone.classList.remove('pdf-mode');
         printZone.classList.add('print-only');
-        alert("Erreur lors de la création du PDF.");
+        console.error("Erreur PDF:", err);
     }
-}
+
 
 
 
