@@ -463,22 +463,38 @@ function updateManualListDisplay() {
 
 
 async function shareOrder() {
-    const element = document.getElementById('print-zone');
-    if (!element) return;
-
-    // Remet la date du jour
+    // 1. On prépare la mise en page EXACTEMENT comme l'imprimante
     document.getElementById('print-date').innerText = "Le " + new Date().toLocaleDateString('fr-FR');
+    const pc = document.getElementById('print-content');
+    pc.innerHTML = "";
+    let empty = true;
 
-    element.classList.add('pdf-mode');
+    const createTable = (title, items, isPreset) => {
+        let h = '<div class="category-block" style="background:#000; color:white; font-weight:bold; font-size:14px; padding:5px; margin-top:10px;">' + title + '</div>';
+        h += '<table style="width:100%; border-collapse:collapse; margin-bottom:10px;"><thead><tr style="background:#f2f2f2;"><th style="border:1px solid #ddd; padding:5px; text-align:left; color:black;">Article</th><th style="border:1px solid #ddd; padding:5px; text-align:left; color:black;">Référence</th><th style="border:1px solid #ddd; padding:5px; text-align:center; color:black;">Qté</th></tr></thead><tbody>';
+        items.forEach(p => {
+            const q = isPreset ? quantities[p.r] : p.q;
+            h += '<tr style="border:1px solid #ddd;"><td style="border:1px solid #ddd; padding:5px; color:black;">' + p.n + '</td><td style="border:1px solid #ddd; padding:5px; color:black;">' + p.r + '</td><td style="border:1px solid #ddd; padding:5px; text-align:center; color:black; font-weight:bold;">' + q + '</td></tr>';
+        });
+        return h + '</tbody></table></div>';
+    };
 
-    // On crée un clone propre à 800px pour éviter les bugs d'affichage
-    const clone = element.cloneNode(true);
-    clone.style.width = '800px';
-    clone.style.position = 'absolute';
-    clone.style.left = '-9999px';
-    clone.style.top = '0';
-    document.body.appendChild(clone);
+    Object.keys(myDat).forEach(cat => {
+        const items = myDat[cat].filter(p => quantities[p.r] > 0);
+        if (items.length > 0) { empty = false; pc.innerHTML += createTable(cat, items, true); }
+    });
+    if(manualItems.length > 0) { empty = false; pc.innerHTML += createTable("HORS STOCK", manualItems, false); }
 
+    if(empty) return alert("Commande vide !");
+
+    // 2. On bloque la vue en haut de page pour éviter le bug de la page blanche
+    const printZone = document.getElementById('print-zone');
+    window.scrollTo(0, 0);
+
+    printZone.classList.remove('print-only');
+    printZone.classList.add('pdf-mode'); // Active notre CSS spécial
+
+    // 3. Configuration du PDF en forçant la largeur d'un écran PC (800px)
     const opt = {
         margin:       10,
         filename:     'Commande_Consommables.pdf',
@@ -488,8 +504,11 @@ async function shareOrder() {
     };
 
     try {
-        // On génère le PDF en arrière-plan sous forme de fichier partageable
-        const pdfBlob = await html2pdf().from(clone).set(opt).output('blob');
+        const pdfBlob = await html2pdf().set(opt).from(printZone).output('blob');
+
+        printZone.classList.remove('pdf-mode');
+        printZone.classList.add('print-only');
+
         const file = new File([pdfBlob], 'Commande_Consommables.pdf', { type: 'application/pdf' });
 
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
@@ -499,21 +518,19 @@ async function shareOrder() {
                 text: 'Voici la commande au format PDF.'
             });
         } else {
-            // Sécurité de secours si le partage natif n'est pas dispo
             const url = URL.createObjectURL(pdfBlob);
             const a = document.createElement('a');
             a.href = url;
             a.download = 'Commande_Consommables.pdf';
             a.click();
         }
-    } catch (error) {
-        console.error("Erreur génération PDF:", error);
+    } catch (err) {
+        printZone.classList.remove('pdf-mode');
+        printZone.classList.add('print-only');
         alert("Erreur lors de la création du PDF.");
-    } finally {
-        document.body.removeChild(clone);
-        element.classList.remove('pdf-mode');
     }
 }
+
 
 
 
