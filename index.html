@@ -460,72 +460,82 @@ function updateManualListDisplay() {
 
 
         async function shareOrder() {
-            // 1. On prépare la mise en page EXACTEMENT comme l'imprimante
-            document.getElementById('print-date').innerText = "Le " + new Date().toLocaleDateString('fr-FR');
-            const pc = document.getElementById('print-content');
-            pc.innerHTML = "";
-            let empty = true;
+    const element = document.getElementById('print-zone');
+    if (!element) return;
 
-            const createTable = (title, items, isPreset) => {
-                let h = `<div class="category-block"><div style="background:#000; color:white; font-weight:bold; font-size:10pt; padding:3px 8px;">${title}</div><table><thead><tr><th>Article</th><th>Référence</th><th style="text-align:center">Qté</th></tr></thead><tbody>`;
-                items.forEach(p => {
-                    const q = isPreset ? quantities[p.r] : p.q;
-                    h += `<tr><td style="font-weight:bold; color:black;">${p.n}</td><td style="color:black; font-family:monospace; font-weight:bold;">${p.r}</td><td class="qty-cell" style="color:black;">${q}</td></tr>`;
-                });
-                return h + `</tbody></table></div>`;
-            }
+    // 1. On remet la date du jour
+    document.getElementById('print-date').innerText = "Le " + new Date().toLocaleDateString('fr-FR');
+    const pc = document.getElementById('print-content');
+    pc.innerHTML = "";
+    let empty = true;
 
-            Object.keys(myData).forEach(cat => {
-                const items = myData[cat].filter(p => quantities[p.r] > 0);
-                if(items.length > 0) { empty = false; pc.innerHTML += createTable(cat, items, true); }
+    const createTable = (title, items, isPreset) => {
+        let h = `<div class="category-block"><div style="background:#000; color:white; font-weight:bold; font-size:10pt; padding:3px 8px;">${title}</div><table><thead><tr><th>Article</th><th>Référence</th><th style="text-align:center">Qté</th></tr></thead><tbody>`;
+        items.forEach(p => {
+            const q = isPreset ? quantities[p.r] : p.q;
+            h += `<tr><td style="font-weight:bold; color:black;">${p.n}</td><td style="color:black; font-family:monospace; font-weight:bold;">${p.r}</td><td class="qty-cell" style="color:black;">${q}</td></tr>`;
+        });
+        return h + `</tbody></table></div>`;
+    };
+
+    Object.keys(myData).forEach(cat => {
+        const items = myData[cat].filter(p => quantities[p.r] > 0);
+        if(items.length > 0) { empty = false; pc.innerHTML += createTable(cat, items, true); }
+    });
+    if(manualItems.length > 0) { empty = false; pc.innerHTML += createTable("HORS STOCK", manualItems, false); }
+
+    if(empty) return alert("Commande vide !");
+
+    // 2. On active le mode PDF sur l'élément original
+    element.classList.remove('print-only');
+    element.classList.add('pdf-mode');
+
+    // 3. LA SOLUTION : On crée un clone invisible forcé à 800px (comme sur ton screen qui marchait)
+    const clone = element.cloneNode(true);
+    clone.style.width = '800px';
+    clone.style.position = 'absolute';
+    clone.style.left = '-9999px';
+    clone.style.top = '0';
+    document.body.appendChild(clone);
+
+    // 4. Configuration du PDF sur ce clone de 800px
+    const opt = {
+        margin:       10,
+        filename:     'Commande_Consommables.pdf',
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, scrollY: 0, windowWidth: 800 }, 
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    try {
+        const pdfBlob = await html2pdf().set(opt).from(clone).output('blob');
+
+        const file = new File([pdfBlob], 'Commande_Consommables.pdf', { type: 'application/pdf' });
+        
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            await navigator.share({
+                files: [file],
+                title: 'Bon de Commande',
+                text: 'Voici la commande au format PDF.'
             });
-            if(manualItems.length > 0) { empty = false; pc.innerHTML += createTable("HORS STOCK", manualItems, false); }
-
-            if(empty) return alert("Commande vide !");
-
-            // 2. On bloque la vue en haut de page pour éviter le bug de la page blanche
-            const printZone = document.getElementById('print-zone');
-            window.scrollTo(0, 0); 
-            
-            printZone.classList.remove('print-only');
-            printZone.classList.add('pdf-mode'); // Active notre CSS spécial
-
-            // 3. Configuration du PDF en forçant la largeur d'un écran PC (800px)
-            const opt = {
-                margin:       10,
-                filename:     'Commande_Consommables.pdf',
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, scrollY: 0, windowWidth: 800 }, 
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            };
-
-            try {
-                const pdfBlob = await html2pdf().set(opt).from(printZone).output('blob');
-                
-                printZone.classList.remove('pdf-mode');
-                printZone.classList.add('print-only');
-
-                const file = new File([pdfBlob], 'Commande_Consommables.pdf', { type: 'application/pdf' });
-                
-                if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                    await navigator.share({
-                        files: [file],
-                        title: 'Bon de Commande',
-                        text: 'Voici la commande au format PDF.'
-                    });
-                } else {
-                    const url = URL.createObjectURL(pdfBlob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = 'Commande_Consommables.pdf';
-                    a.click();
-                }
-            } catch (err) {
-                printZone.classList.remove('pdf-mode');
-                printZone.classList.add('print-only');
-                alert("Erreur lors de la création du PDF.");
-            }
+        } else {
+            const url = URL.createObjectURL(pdfBlob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Commande_Consommables.pdf';
+            a.click();
         }
+    } catch (err) {
+        console.error("Erreur PDF:", err);
+        alert("Erreur lors de la création du PDF.");
+    } finally {
+        // 5. Nettoyage du clone et retour à la normale
+        document.body.removeChild(clone);
+        element.classList.remove('pdf-mode');
+        element.classList.add('print-only');
+    }
+}
+
 
 
 
