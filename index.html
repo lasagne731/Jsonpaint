@@ -110,13 +110,13 @@
         .step-input { width: 50px; padding: 2px; text-align: center; border: 1px solid #ccc; border-radius: 4px; font-weight: bold; }
         
         
-                /* --- STYLE SPÉCIAL PARTAGE PDF (Une seule colonne) --- */
-        #print-zone.pdf-mode { display: block !important; background: white; color: black; padding: 20px; }
-        #print-zone.pdf-mode .print-grid { display: block !important; }
-        #print-zone.pdf-mode .category-block { break-inside: avoid; margin-bottom: 20px !important; border: 1px solid #000; }
-        #print-zone.pdf-mode table { width: 100%; border-collapse: collapse; }
+                        /* --- STYLE SPÉCIAL PARTAGE PDF (Une seule colonne plein écran) --- */
+        #print-zone.pdf-mode { display: block !important; width: 100% !important; background: white; color: black; padding: 10px; box-sizing: border-box; }
+        #print-zone.pdf-mode .print-grid { display: block !important; width: 100% !important; }
+        #print-zone.pdf-mode .category-block { break-inside: avoid; margin-bottom: 15px !important; border: 1px solid #000; width: 100% !important; }
+        #print-zone.pdf-mode table { width: 100% !important; border-collapse: collapse; table-layout: fixed; }
         #print-zone.pdf-mode th { background: #f0f0f0; font-size: 8pt; padding: 4px; border-bottom: 1px solid #000; text-align: left; color: black; }
-        #print-zone.pdf-mode td { font-size: 9pt; padding: 5px; border-bottom: 1px solid #ddd; color: black; }
+        #print-zone.pdf-mode td { font-size: 9pt; padding: 5px; border-bottom: 1px solid #ddd; color: black; word-break: break-word; }
         #print-zone.pdf-mode .qty-cell { text-align: center; font-weight: bold; background: #f9f9f9; width: 40px; border-left: 1px solid #ccc; }
 
 
