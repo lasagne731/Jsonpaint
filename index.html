@@ -463,14 +463,15 @@ function updateManualListDisplay() {
 
 
 async function shareOrder() {
-    // 1. On cible ton élément à imprimer
     const element = document.getElementById('print-zone');
     if (!element) return;
 
-    // 2. On active le mode PDF pour appliquer les styles
+    // Remet la date du jour
+    document.getElementById('print-date').innerText = "Le " + new Date().toLocaleDateString('fr-FR');
+
     element.classList.add('pdf-mode');
 
-    // 3. On crée un clone invisible forcé à 800px de large (simule un écran PC)
+    // On crée un clone propre à 800px pour éviter les bugs d'affichage
     const clone = element.cloneNode(true);
     clone.style.width = '800px';
     clone.style.position = 'absolute';
@@ -478,7 +479,6 @@ async function shareOrder() {
     clone.style.top = '0';
     document.body.appendChild(clone);
 
-    // 4. Configuration du PDF
     const opt = {
         margin:       10,
         filename:     'Commande_Consommables.pdf',
@@ -488,16 +488,33 @@ async function shareOrder() {
     };
 
     try {
-        // 5. Génération du PDF depuis le clone propre
-        await html2pdf().from(clone).set(opt).save();
+        // On génère le PDF en arrière-plan sous forme de fichier partageable
+        const pdfBlob = await html2pdf().from(clone).set(opt).output('blob');
+        const file = new File([pdfBlob], 'Commande_Consommables.pdf', { type: 'application/pdf' });
+
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            await navigator.share({
+                files: [file],
+                title: 'Bon de Commande',
+                text: 'Voici la commande au format PDF.'
+            });
+        } else {
+            // Sécurité de secours si le partage natif n'est pas dispo
+            const url = URL.createObjectURL(pdfBlob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Commande_Consommables.pdf';
+            a.click();
+        }
     } catch (error) {
         console.error("Erreur génération PDF:", error);
+        alert("Erreur lors de la création du PDF.");
     } finally {
-        // 6. Nettoyage automatique
         document.body.removeChild(clone);
         element.classList.remove('pdf-mode');
     }
 }
+
 
 
 
