@@ -458,7 +458,7 @@ function updateManualListDisplay() {
         }
 
 
-                async function shareOrder() {
+                        async function shareOrder() {
             // 1. On prépare la mise en page EXACTEMENT comme l'imprimante
             document.getElementById('print-date').innerText = "Le " + new Date().toLocaleDateString('fr-FR');
             const pc = document.getElementById('print-content');
@@ -482,14 +482,22 @@ function updateManualListDisplay() {
 
             if(empty) return alert("Commande vide !");
 
-            // 2. On bloque la vue en haut de page pour éviter le bug de la page blanche
+            // 2. Préparation des éléments
             const printZone = document.getElementById('print-zone');
             window.scrollTo(0, 0); 
             
             printZone.classList.remove('print-only');
-            printZone.classList.add('pdf-mode'); // Active notre CSS spécial
+            printZone.classList.add('pdf-mode');
 
-            // 3. Configuration du PDF en forçant la largeur d'un écran PC (800px)
+            // --- L'ASTUCE DU CLONE EST ICI ---
+            const clone = printZone.cloneNode(true);
+            clone.style.width = '800px'; 
+            clone.style.position = 'absolute';
+            clone.style.left = '-9999px'; 
+            clone.style.top = '0';
+            document.body.appendChild(clone);
+
+            // 3. Configuration du PDF ciblant le clone
             const opt = {
                 margin:       10,
                 filename:     'Commande_Consommables.pdf',
@@ -499,8 +507,11 @@ function updateManualListDisplay() {
             };
 
             try {
-                const pdfBlob = await html2pdf().set(opt).from(printZone).output('blob');
+                // On génère le fichier depuis le clone de 800px
+                const pdfBlob = await html2pdf().set(opt).from(clone).output('blob');
                 
+                // Nettoyage
+                document.body.removeChild(clone);
                 printZone.classList.remove('pdf-mode');
                 printZone.classList.add('print-only');
 
@@ -520,15 +531,13 @@ function updateManualListDisplay() {
                     a.click();
                 }
             } catch (err) {
+                // Nettoyage en cas d'erreur
+                if(document.body.contains(clone)) document.body.removeChild(clone);
                 printZone.classList.remove('pdf-mode');
                 printZone.classList.add('print-only');
                 alert("Erreur lors de la création du PDF.");
             }
         }
-
-
-
-
 
 
 
