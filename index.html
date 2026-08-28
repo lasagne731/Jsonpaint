@@ -306,90 +306,99 @@
 
 
                     function renderConfig(container) {
-            let html = `
-            <div style="background: #fff9db; border: 1px solid #f59e0b; padding: 12px; border-radius: 8px; margin-bottom: 15px; font-size: 13px; color: #92400e;">
-                <strong style="display: block; margin-bottom: 5px;">⚠️ ATTENTION : PERTE DE DONNÉES</strong>
-                Si vous effacez l'historique du navigateur, vos rayons et quantités seront <b>supprimés</b>.
-                <br><br>
-                <strong>💡 Sauvegarde :</strong>
-                <ul style="margin-top: 5px; padding-left: 20px;">
-                    <li>Faites <b>"SAUVEGARDER"</b> régulièrement.</li>
-                </ul>
-            </div>
+    let html = `
+    <div style="background: #fff9db; border: 1px solid #f59e0b; padding: 12px; border-radius: 8px; margin-bottom: 15px; font-size: 13px; color: #92400e;">
+        <strong style="display: block; margin-bottom: 5px;">⚠️ ATTENTION : PERTE DE DONNÉES</strong>
+        Si vous effacez l'historique du navigateur, vos rayons et quantités seront <b>supprimés</b>.
+        <br><br>
+        <strong>💡 Sauvegarde :</strong>
+        <ul style="margin-top: 5px; padding-left: 20px;">
+            <li>Faites <b>"SAUVEGARDER"</b> régulièrement.</li>
+        </ul>
+    </div>
 
-            <div class="config-box box-orange" style="border-color: #6b7280; background: #fff;">
-                <h3 style="margin-top:0; font-size: 14px; border-bottom: 1px solid #ddd; padding-bottom: 5px;">🎨 CHOIX DU THÈME</h3>
-                <div style="display: flex; gap: 10px; margin-top: 10px;">
-                    <button onclick="changeTheme('orange')" style="flex:1; background:#ea580c; color:white; border:none; padding:10px; border-radius:5px; cursor:pointer;">Orange</button>
-                    <button onclick="changeTheme('blue')" style="flex:1; background:#2563eb; color:white; border:none; padding:10px; border-radius:5px; cursor:pointer;">Bleu</button>
-                    <button onclick="changeTheme('green')" style="flex:1; background:#16a34a; color:white; border:none; padding:10px; border-radius:5px; cursor:pointer;">Vert</button>
-                    <button onclick="changeTheme('red')" style="flex:1; background:#dc2626; color:white; border:none; padding:10px; border-radius:5px; cursor:pointer;">Rouge</button>
+    <div class="config-box box-orange" style="border-color: #6b7280; background: #fff;">
+        <h3 style="margin-top:0; font-size: 14px; border-bottom: 1px solid #ddd; padding-bottom: 5px;">🎨 CHOIX DU THÈME</h3>
+        <div style="display: flex; gap: 10px; margin-top: 10px;">
+            <button onclick="changeTheme('orange')" style="flex:1; background:#ea580c; color:white; border:none; padding:10px; border-radius:5px; cursor:pointer;">Orange</button>
+            <button onclick="changeTheme('blue')" style="flex:1; background:#2563eb; color:white; border:none; padding:10px; border-radius:5px; cursor:pointer;">Bleu</button>
+            <button onclick="changeTheme('green')" style="flex:1; background:#16a34a; color:white; border:none; padding:10px; border-radius:5px; cursor:pointer;">Vert</button>
+            <button onclick="changeTheme('red')" style="flex:1; background:#dc2626; color:white; border:none; padding:10px; border-radius:5px; cursor:pointer;">Rouge</button>
+        </div>
+    </div>
+
+    <div class="config-box box-orange">
+        <h3 style="margin-top:0; font-size: 14px;">📂 SAUVEGARDE</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <button onclick="exportData()" class="btn-action" style="background: #374151;">💾 SAUVEGARDER</button>
+            <button onclick="document.getElementById('importFile').click()" class="btn-action" style="background: #d97706;">📥 CHARGER</button>
+            <input type="file" id="importFile" style="display:none" accept=".json" onchange="importData(event)">
+        </div>
+    </div>
+
+    <div class="config-box" style="background: #e0e7ff; border-color: #a5b4fc;">
+         <h3 style="margin-top:0; font-size: 14px;">📑 CRÉER RAYON</h3>
+         <div style="display: flex; gap: 5px;">
+            <input type="text" id="new-cat-name" placeholder="Nom (ex: VITRAGE)" class="input-std" style="margin:0;">
+            <button onclick="addNewCategory()" class="btn-action" style="background: #4f46e5; width: 60px;">OK</button>
+         </div>
+    </div>
+
+    <div class="config-box" style="background: #f3f4f6; border-color: #d1d5db;">
+        <h3 style="margin-top:0; font-size: 14px;">➕ AJOUTER ARTICLE</h3>
+        <select id="new-cat" class="input-std">
+            ${Object.keys(myData).map(c => `<option value="${c}">${c}</option>`).join('')}
+        </select>
+        <input type="text" id="new-name" placeholder="Nom" class="input-std">
+        <input type="text" id="new-ref" placeholder="Référence" class="input-std">
+        <input type="number" id="new-step" placeholder="Cond. (ex: 15)" class="input-std">
+        <button onclick="addItem()" class="btn-action" style="background: var(--primary-600); width:100%;">AJOUTER L'ARTICLE</button>
+    </div>
+
+    <h3 style="font-size: 12px; color: #9ca3af; text-transform: uppercase;">🗑️ GESTION DU CONTENU</h3>
+    `;
+
+    Object.keys(myData).forEach(cat => {
+        html += `<div style="margin-bottom: 1rem; border: 1px solid #e5e7eb; border-radius: 0.5rem; overflow:hidden;">
+            <div style="background: #f9fafb; padding: 10px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e5e7eb;">
+                <span style="font-weight:bold; color: var(--primary-600); font-size: 14px;">${cat}</span>
+                <button onclick="deleteCategory('${cat}')" style="font-size: 10px; background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; padding: 2px 5px; border-radius: 4px; cursor:pointer;">SUPPR. RAYON</button>
+            </div>`;
+        myData[cat].forEach((p, index) => {
+            html += `<div style="padding: 8px; border-bottom: 1px solid #f3f4f6; font-size: 12px; background: white;">
+                <div style="display: flex; gap: 5px; margin-bottom: 5px;">
+                    <input type="text" value="${p.n}" onchange="updateItemField('${cat}', ${index}, 'n', this.value)" style="flex: 2; padding: 4px; font-size: 12px; border: 1px solid #ccc; border-radius: 4px;" placeholder="Nom">
+                    <input type="text" value="${p.r}" onchange="updateItemField('${cat}', ${index}, 'r', this.value)" style="flex: 1; padding: 4px; font-size: 12px; border: 1px solid #ccc; border-radius: 4px;" placeholder="Réf">
                 </div>
-            </div>
-
-            <div class="config-box box-orange">
-                <h3 style="margin-top:0; font-size: 14px;">📂 SAUVEGARDE</h3>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                    <button onclick="exportData()" class="btn-action" style="background: #374151;">💾 SAUVEGARDER</button>
-                    <button onclick="document.getElementById('importFile').click()" class="btn-action" style="background: #d97706;">📥 CHARGER</button>
-                    <input type="file" id="importFile" style="display:none" accept=".json" onchange="importData(event)">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        Cond: <input type="number" value="${p.s || 1}" onchange="updateStepInConfig('${cat}', ${index}, this.value)" class="step-input" style="width: 45px;">
+                    </div>
+                    <div style="display: flex; gap: 3px; align-items: center;">
+                        <select onchange="moveItemCategory('${cat}', ${index}, this.value)" style="font-size: 11px; padding: 2px; border-radius: 4px; border: 1px solid #ccc; max-width: 85px;">
+                            <option value="" disabled selected>Déplacer...</option>
+                            ${Object.keys(myData).map(c => `<option value="${c}">${c}</option>`).join('')}
+                        </select>
+                        <button onclick="moveItem('${cat}', ${index}, -1)" ${index === 0 ? 'disabled style="opacity:0.3"' : ''} style="background:#e5e7eb; border:none; padding:2px 6px; border-radius:3px; cursor:pointer;">⬆️</button>
+                        <button onclick="moveItem('${cat}', ${index}, 1)" ${index === myData[cat].length - 1 ? 'disabled style="opacity:0.3"' : ''} style="background:#e5e7eb; border:none; padding:2px 6px; border-radius:3px; cursor:pointer;">⬇️</button>
+                        <button onclick="deleteItemFromCatalog('${cat}', ${index})" style="color: #dc2626; border: none; background: none; font-weight:bold; cursor:pointer; font-size:16px; padding:0 5px;">×</button>
+                    </div>
                 </div>
-            </div>
+            </div>`;
+        });
+        html += `</div>`;
+    });
+    container.innerHTML = html;
+}
 
-            <div class="config-box" style="background: #e0e7ff; border-color: #a5b4fc;">
-                 <h3 style="margin-top:0; font-size: 14px;">📑 CRÉER RAYON</h3>
-                 <div style="display: flex; gap: 5px;">
-                    <input type="text" id="new-cat-name" placeholder="Nom (ex: VITRAGE)" class="input-std" style="margin:0;">
-                    <button onclick="addNewCategory()" class="btn-action" style="background: #4f46e5; width: 60px;">OK</button>
-                 </div>
-            </div>
+function deleteItemFromCatalog(cat, index) {
+    if(confirm("Supprimer cet article du rayon ?")) {
+        myData[cat].splice(index, 1);
+        saveToStorage();
+        showTab("CONFIG");
+    }
+}
 
-            <div class="config-box" style="background: #f3f4f6; border-color: #d1d5db;">
-                <h3 style="margin-top:0; font-size: 14px;">➕ AJOUTER ARTICLE</h3>
-                <select id="new-cat" class="input-std">
-                    ${Object.keys(myData).map(c => `<option value="${c}">${c}</option>`).join('')}
-                </select>
-                <input type="text" id="new-name" placeholder="Nom" class="input-std">
-                <input type="text" id="new-ref" placeholder="Référence" class="input-std">
-                <input type="number" id="new-step" placeholder="Cond. (ex: 15)" class="input-std">
-                <button onclick="addItem()" class="btn-action" style="background: var(--primary-600); width:100%;">AJOUTER L'ARTICLE</button>
-            </div>
-
-            <h3 style="font-size: 12px; color: #9ca3af; text-transform: uppercase;">🗑️ GESTION DU CONTENU</h3>
-            `;
-
-            Object.keys(myData).forEach(cat => {
-                html += `<div style="margin-bottom: 1rem; border: 1px solid #e5e7eb; border-radius: 0.5rem; overflow:hidden;">
-                    <div style="background: #f9fafb; padding: 10px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e5e7eb;">
-                        <span style="font-weight:bold; color: var(--primary-600); font-size: 14px;">${cat}</span>
-                        <button onclick="deleteCategory('${cat}')" style="font-size: 10px; background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; padding: 2px 5px; border-radius: 4px; cursor:pointer;">SUPPR. RAYON</button>
-                    </div>`;
-                myData[cat].forEach((p, index) => {
-                    html += `<div style="padding: 8px; border-bottom: 1px solid #f3f4f6; font-size: 12px; background: white;">
-                        <div style="display: flex; gap: 5px; margin-bottom: 5px;">
-                            <input type="text" value="${p.n}" onchange="updateItemField('${cat}', ${index}, 'n', this.value)" style="flex: 2; padding: 4px; font-size: 12px; border: 1px solid #ccc; border-radius: 4px;" placeholder="Nom">
-                            <input type="text" value="${p.r}" onchange="updateItemField('${cat}', ${index}, 'r', this.value)" style="flex: 1; padding: 4px; font-size: 12px; border: 1px solid #ccc; border-radius: 4px;" placeholder="Réf">
-                        </div>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                Cond: <input type="number" value="${p.s || 1}" onchange="updateStepInConfig('${cat}', ${index}, this.value)" class="step-input" style="width: 45px;">
-                            </div>
-                            <div style="display: flex; gap: 3px; align-items: center;">
-                                <select onchange="moveItemCategory('${cat}', ${index}, this.value)" style="font-size: 11px; padding: 2px; border-radius: 4px; border: 1px solid #ccc; max-width: 85px;">
-                                    <option value="" disabled selected>Déplacer...</option>
-                                    ${Object.keys(myData).map(c => `<option value="${c}">${c}</option>`).join('')}
-                                </select>
-                                <button onclick="moveItem('${cat}', ${index}, -1)" ${index === 0 ? 'disabled style="opacity:0.3"' : ''} style="background:#e5e7eb; border:none; padding:2px 6px; border-radius:3px; cursor:pointer;">⬆️</button>
-                                <button onclick="moveItem('${cat}', ${index}, 1)" ${index === myData[cat].length - 1 ? 'disabled style="opacity:0.3"' : ''} style="background:#e5e7eb; border:none; padding:2px 6px; border-radius:3px; cursor:pointer;">⬇️</button>
-                                <button onclick="deleteItem('${cat}', ${index})" style="color: #dc2626; border: none; background: none; font-weight:bold; cursor:pointer; font-size:16px; padding:0 5px;">×</button>
-                            </div>
-                        </div>
-                    </div>`;
-                });
-                html += `</div>`;
-            });
-            container.innerHTML = html;
-        }
 
 
 
