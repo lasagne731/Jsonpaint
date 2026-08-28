@@ -252,21 +252,20 @@
         }
 
 
-            function renderConfig(container) {
-        let html = `
-        <div style="background: #fff9db; border: 1px solid #f59e0b; padding: 12px; border-radius: 8px; margin-bottom: 15px; font-size: 13px; color: #92400e;">
-            <strong style="display: block; margin-bottom: 5px;">⚠️ ATTENTION : PERTE DE DONNÉES</strong>
-            Si vous effacez l'historique du navigateur, vos rayons et quantités seront <b>supprimés</b>.
-            <br><br>
-            <strong>💡 Sauvegarde :</strong>
-            <ul style="margin-top: 5px; padding-left: 20px;">
-                <li>Faites <b>"SAUVEGARDER"</b> régulièrement.</li>
-            </ul>
-        </div>
+                    function renderConfig(container) {
+            let html = `
+            <div style="background: #fff9db; border: 1px solid #f59e0b; padding: 12px; border-radius: 8px; margin-bottom: 15px; font-size: 13px; color: #92400e;">
+                <strong style="display: block; margin-bottom: 5px;">⚠️ ATTENTION : PERTE DE DONNÉES</strong>
+                Si vous effacez l'historique du navigateur, vos rayons et quantités seront <b>supprimés</b>.
+                <br><br>
+                <strong>💡 Sauvegarde :</strong>
+                <ul style="margin-top: 5px; padding-left: 20px;">
+                    <li>Faites <b>"SAUVEGARDER"</b> régulièrement.</li>
+                </ul>
+            </div>
 
-        <div class="config-box box-orange" style="border-color: #6b7280; background: #fff;">
-            <h3 style="margin-top:0; font-size: 14px; border-bottom: 1px solid #ddd; padding-bottom: 5px;">🎨 CHOIX DU THÈME</h3>
-
+            <div class="config-box box-orange" style="border-color: #6b7280; background: #fff;">
+                <h3 style="margin-top:0; font-size: 14px; border-bottom: 1px solid #ddd; padding-bottom: 5px;">🎨 CHOIX DU THÈME</h3>
                 <div style="display: flex; gap: 10px; margin-top: 10px;">
                     <button onclick="changeTheme('orange')" style="flex:1; background:#ea580c; color:white; border:none; padding:10px; border-radius:5px; cursor:pointer;">Orange</button>
                     <button onclick="changeTheme('blue')" style="flex:1; background:#2563eb; color:white; border:none; padding:10px; border-radius:5px; cursor:pointer;">Bleu</button>
@@ -274,7 +273,6 @@
                     <button onclick="changeTheme('red')" style="flex:1; background:#dc2626; color:white; border:none; padding:10px; border-radius:5px; cursor:pointer;">Rouge</button>
                 </div>
             </div>
-
 
             <div class="config-box box-orange">
                 <h3 style="margin-top:0; font-size: 14px;">📂 SAUVEGARDE</h3>
@@ -285,7 +283,6 @@
                 </div>
             </div>
 
-
             <div class="config-box" style="background: #e0e7ff; border-color: #a5b4fc;">
                  <h3 style="margin-top:0; font-size: 14px;">📑 CRÉER RAYON</h3>
                  <div style="display: flex; gap: 5px;">
@@ -293,7 +290,6 @@
                     <button onclick="addNewCategory()" class="btn-action" style="background: #4f46e5; width: 60px;">OK</button>
                  </div>
             </div>
-
 
             <div class="config-box" style="background: #f3f4f6; border-color: #d1d5db;">
                 <h3 style="margin-top:0; font-size: 14px;">➕ AJOUTER ARTICLE</h3>
@@ -306,10 +302,8 @@
                 <button onclick="addItem()" class="btn-action" style="background: var(--primary-600); width:100%;">AJOUTER L'ARTICLE</button>
             </div>
 
-
             <h3 style="font-size: 12px; color: #9ca3af; text-transform: uppercase;">🗑️ GESTION DU CONTENU</h3>
             `;
-
 
             Object.keys(myData).forEach(cat => {
                 html += `<div style="margin-bottom: 1rem; border: 1px solid #e5e7eb; border-radius: 0.5rem; overflow:hidden;">
@@ -318,20 +312,32 @@
                         <button onclick="deleteCategory('${cat}')" style="font-size: 10px; background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; padding: 2px 5px; border-radius: 4px; cursor:pointer;">SUPPR. RAYON</button>
                     </div>`;
                 myData[cat].forEach((p, index) => {
-                    html += `<div style="padding: 8px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f3f4f6; font-size: 12px; background: white;">
-                        <div style="flex:1;">
-                            <b>${p.n}</b> <span style="color:#9ca3af">(${p.r})</span>
-                            <div style="margin-top:4px;">
-                                Cond. : <input type="number" value="${p.s || 1}" onchange="updateStepInConfig('${cat}', ${index}, this.value)" class="step-input">
+                    html += `<div style="padding: 8px; border-bottom: 1px solid #f3f4f6; font-size: 12px; background: white;">
+                        <div style="display: flex; gap: 5px; margin-bottom: 5px;">
+                            <input type="text" value="${p.n}" onchange="updateItemField('${cat}', ${index}, 'n', this.value)" style="flex: 2; padding: 4px; font-size: 12px; border: 1px solid #ccc; border-radius: 4px;" placeholder="Nom">
+                            <input type="text" value="${p.r}" onchange="updateItemField('${cat}', ${index}, 'r', this.value)" style="flex: 1; padding: 4px; font-size: 12px; border: 1px solid #ccc; border-radius: 4px;" placeholder="Réf">
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                Cond: <input type="number" value="${p.s || 1}" onchange="updateStepInConfig('${cat}', ${index}, this.value)" class="step-input" style="width: 45px;">
+                            </div>
+                            <div style="display: flex; gap: 3px; align-items: center;">
+                                <select onchange="moveItemCategory('${cat}', ${index}, this.value)" style="font-size: 11px; padding: 2px; border-radius: 4px; border: 1px solid #ccc; max-width: 85px;">
+                                    <option value="" disabled selected>Déplacer...</option>
+                                    ${Object.keys(myData).map(c => `<option value="${c}">${c}</option>`).join('')}
+                                </select>
+                                <button onclick="moveItem('${cat}', ${index}, -1)" ${index === 0 ? 'disabled style="opacity:0.3"' : ''} style="background:#e5e7eb; border:none; padding:2px 6px; border-radius:3px; cursor:pointer;">⬆️</button>
+                                <button onclick="moveItem('${cat}', ${index}, 1)" ${index === myData[cat].length - 1 ? 'disabled style="opacity:0.3"' : ''} style="background:#e5e7eb; border:none; padding:2px 6px; border-radius:3px; cursor:pointer;">⬇️</button>
+                                <button onclick="deleteItem('${cat}', ${index})" style="color: #dc2626; border: none; background: none; font-weight:bold; cursor:pointer; font-size:16px; padding:0 5px;">×</button>
                             </div>
                         </div>
-                        <button onclick="deleteItem('${cat}', ${index})" style="color: #dc2626; border: none; background: none; font-weight:bold; cursor:pointer; font-size:18px; padding:0 10px;">×</button>
                     </div>`;
                 });
                 html += `</div>`;
             });
             container.innerHTML = html;
         }
+
 
 
         function changeTheme(themeName) {
@@ -378,11 +384,30 @@
         }
 
 
-        function deleteItem(cat, index) {
-            if(confirm("Supprimer l'article ?")) {
-                myData[cat].splice(index, 1); saveToStorage(); showTab("CONFIG");
-            }
+                function updateItemField(cat, index, field, value) {
+            if (value.trim() === "") return; // Empêche de mettre un nom ou une réf vide
+            myData[cat][index][field] = value.trim();
+            saveToStorage();
         }
+
+        function moveItem(cat, index, direction) {
+            const list = myData[cat];
+            const newIndex = index + direction;
+            if (newIndex < 0 || newIndex >= list.length) return;
+            const item = list.splice(index, 1)[0];
+            list.splice(newIndex, 0, item);
+            saveToStorage();
+            showTab("CONFIG");
+        }
+
+        function moveItemCategory(oldCat, index, newCat) {
+            if (!newCat || oldCat === newCat) return;
+            const item = myData[oldCat].splice(index, 1)[0];
+            myData[newCat].push(item);
+            saveToStorage();
+            showTab("CONFIG");
+        }
+
 
 
         function renderManualForm(container) {
