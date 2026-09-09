@@ -202,16 +202,148 @@
 
     <script>
         const defaultData = {
-            "ABRASIF": [{n: "Scotchbrite", r: "3M07904"}, {n: "Disque P120", r: "LKENA1290"}, {n: "Disque P180", r: "LKENA1292"}, {n: "Disque P240", r: "LKENA1294"}, {n: "Disque P320", r: "LKENA1295"}, {n: "Disque P400", r: "LKENA1296"}, {n: "Disque P500", r: "LKENA1455"}, {n: "Disque P600", r: "LKENA1298"}, {n: "EPONGE P600", r: "LKENA1468"}, {n: "EPONGE P1000", r: "LKENA1469"}, {n: "Soft hand P400", r: "3M50337"}, {n: "Soft hand P600", r: "3M50339"}, {n: "Soft hand P800", r: "3M50340"}, {n: "CUBITRON P80", r: "3M34561"}, {n: "CUBITRON P120 LARGE", r: "3M34573"}, {n: "CUBITRON P120", r: "3M34562"}, {n: "CUBITRON P240", r: "3M34566"}, {n: "CUBITRON P400", r: "3M51437"}, {n: "Feuille bleu P400", r: "3M35110"}, {n: "Feuille bleu P600", r: "3M35111"}, {n: "Feuille bleu P800", r: "3M35112"}, {n: "Triz 32mm 3000", r: "3M50079", s: 100}, {n: "Triz 75mm 1000", r: "3M50413", s: 15}, {n: "Triz 75mm 3000", r: "3M02087", s: 15}, {n: "Triz 75mm 6000", r: "3M51131", s: 15}, {n: "Triz 150mm 3000", r: "3M02085", s: 15}],
-            "MAROUFLAGE": [{n: "Bandecache 50mm", r: "3M06313", s: 24}, {n: "Bandecache 50mm vert", r: "3M50981", s: 24}, {n: "Bandecache 18mm jaune", r: "LKEN85781"}, {n: "Ruban mousse", r: "3M09678"}, {n: "Papier craft", r: "3M06284"}, {n: "Bache", r: "3M50988"}],
-            "MASTIC": [{n: "Mastic polyester", r: "3M00051076"}, {n: "Mastic plastique", r: "LKEN86958"}, {n: "Mastique KENT", r: "LKEN86942"}, {n: "Mastic fibre", r: "LKEN86959"}, {n: "Mastice allu", r: "LKEN86961"}],
-            "PRÉPA / ÉQUIP.": [{n: "Bol prépa 650ml", r: "997180"}, {n: "Bol prépa 1100ml", r: "997181"}, {n: "PPS 400ml", r: "3M26312"}, {n: "PPS 650ml", r: "3M26026"}, {n: "Pot 2l", r: "3M50405"}, {n: "Essuie main", r: "1606242080"}, {n: "Chiffon 3M", r: "3M34567"}, {n: "Tampon essuyage", r: "973844"}, {n: "Filtre cornet", r: "9739G5"}],
-            "LUSTRANT / MOUSSE": [{n: "Mousse lustrage", r: "3M34124"}, {n: "Mousse lustrage", r: "3M34127"}, {n: "Lustrant blanc", r: "3M34131"}, {n: "Lustrant violet", r: "3M34134"}, {n: "Bobidou", r: "LGET100521"}, {n: "Chiffon lustrage", r: "3M60668"}, {n: "Doubleface", r: "3M80322"}],
-            "COMBINAISON": [{n: "Combinaison M", r: "3M4540+M"}, {n: "Combinaison L", r: "3M4540+L"}, {n: "Combinaison XL", r: "3M4540+XL"}, {n: "Masque poussière", r: "3M8822"}],
-            "BOMBE PEINTURE": [{n: "Vernis", r: "LKEN84110"}, {n: "Bombe noir mat", r: "LKEN86245"}, {n: "Noir structurant", r: "LKEN86735"}],
-            "AUTRE": [{n: "Corde à piano", r: "KE0209"}, {n: "Passe fil parbrise", r: "KE0109"}, {n: "Buse Bi-compos", r: "K86031"}, {n: "Cleaner plastique", r: "K34699"}, {n: "Gant protection", r: "1613412380"}, {n: "Agrafe torsadé", r: "K86040"}, {n: "Agrafe torsadé Longue", r: "K86358"}, {n: "Agrafe angle ext", r: "K86279"}, {n: "Agrafe angle int", r: "K86280"}, {n: "Agrafe courte normal", r: "K86038"}, {n: "Glu cyanno liquide", r: "GET1CY20"}, {n: "pinceau retouche", r: "GET3PRV"}, {n: "Chiffon tissu", r: "972459"}, {n: "Buse standard", r: "LKEN34192"}, {n: "Chican", r: "LKEN85385"}, {n: "Produit jante", r: "LBAR37136"}]
-        };
-
+              "ABRASIF": [
+            {n: "Scotchbrite", r: "3M00007904"},
+            {n: "Disque P120", r: "LKENA1290"},
+            {n: "Disque P180", r: "LKENA1292"},
+            {n: "Disque P240", r: "LKENA1294"},
+            {n: "Disque P320", r: "LKENA1295"},
+            {n: "Disque P400", r: "LKENA1296"},
+            {n: "Disque P500", r: "LKENA1455"},
+            {n: "Disque P600", r: "LKENA1298"},
+            {n: "EPONGE 320", r: "LKENA1467"},
+            {n: "EPONGE P600", r: "LKENA1468"},
+            {n: "EPONGE P1000", r: "LKENA1469"},
+            {n: "Soft hand P400", r: "3M00050337"},
+            {n: "Soft hand P800", r: "3M00050340"},
+            {n: "CUBITRON P80 rouleau", r: "3M00034561"},
+            {n: "CUBITRON P120 Large rouleau", r: "3M00034573"},
+            {n: "CUBITRON P120 rouleau", r: "3M00036463"},
+            {n: "CUBITRON P240 rouleau", r: "3M00034566"},
+            {n: "CUBITRON P400 rouleau", r: "3M00051437"},
+            {n: "CUBITRON P120 disque", r: "3M00031651"},
+            {n: "CUBITRON P240 disque", r: "3M00031655"},
+            {n: "CUBITRON P320 disque", r: "3M00031656"},
+            {n: "3M Maron P800 disque", r: "3M00034420", s: 25},
+            {n: "Feuille bleu P320", r: "3M00035109"},
+            {n: "Feuille bleu P400", r: "3M00035110"},
+            {n: "Feuille bleu P600", r: "3M00035111"},
+            {n: "Feuille bleu P800", r: "3M00035112"},
+            {n: "Triz 32mm 3000", r: "3M00050079", s: 100},
+            {n: "Triz 75mm 1000", r: "3M00002091"},
+            {n: "Triz 75mm 3000", r: "3M00002087"},
+            {n: "Triz 75mm 6000", r: "3M00030804"},
+            {n: "Triz 150mm 3000", r: "3M00002085"},
+            {n: "Triz 150mm 5000", r: "3M00030662"}
+        ],
+        "MAROUFLAGE": [
+            {n: "Bandecache 50mm", r: "3M00006313", s: 24},
+            {n: "Bandecache 18mm jaune", r: "LKEN85781"},
+            {n: "Ruban mousse", r: "3M00009678"},
+            {n: "Papier craft", r: "3M00006284"},
+            {n: "Bache", r: "3M00050989"},
+            {n: "Mousse PRIMER SHIELD KENT", r: "LKEN85917"},
+            {n: "Ruban masquage vert 48mm", r: "3M00050981", s: 24}
+        ],
+        "MASTIC": [
+            {n: "Mastic 3M", r: "3M00051076"},
+            {n: "Mastique KENT", r: "LKEN86942"},
+            {n: "Mastic kent Ultra lisse", r: "LKEN86943"},
+            {n: "Mastic plastique", r: "LKEN86958"},
+            {n: "Mastic fibre", r: "LKEN86959"},
+            {n: "Mastice allu", r: "LKEN86961"}
+        ],
+        "PRÉPA / ÉQUIP.": [
+            {n: "Bol prépa 650ml", r: "997180"},
+            {n: "Bol prépa 1100ml", r: "997181"},
+            {n: "Pot 2l", r: "3M00050405"},
+            {n: "PPS 400ml", r: "3M00026312"},
+            {n: "PPS 400ml kit couvercle", r: "3M00026205"},
+            {n: "PPS 650ml", r: "3M00026026"},
+            {n: "PPS 650ml/850 kit couvercle", r: "3M00026199"},
+            {n: "PPS 850ml", r: "3M00026740"},
+            {n: "Essuie main", r: "1656547280"},
+            {n: "Chiffon 3M", r: "3M00034567"},
+            {n: "chiffon tissu", r: "API14568"},
+            {n: "Filtre cornet", r: "9739G5"},
+            {n: "Tampon essuyage", r: "973844"},
+            {n: "Tampon d'essuyage 3M", r: "3M00007910"},
+            {n: "Spatule mélange", r: "LGET101752"}
+        ],
+        "LUSTRANT / MOUSSE": [
+            {n: "Mousse lustrage blanc", r: "3M00034124"},
+            {n: "Mousse lustrage violet", r: "3M00034127"},
+            {n: "Lustrant blanc", r: "3M00034131"},
+            {n: "Lustrant violet", r: "3M00034134"},
+            {n: "Bobidou", r: "LGET100521"},
+            {n: "Chiffon lustrage", r: "3M00060668"},
+            {n: "Doubleface", r: "3M00080322"}
+        ],
+        "COMBINAISON": [
+            {n: "Combinaison M", r: "3M0051851M"},
+            {n: "Combinaison L", r: "3M0051851L"},
+            {n: "Combinaison XL", r: "3M451851XL"}
+        ],
+        "BOMBE PEINTURE": [
+            {n: "Vernis", r: "LKEN84110"},
+            {n: "Bombe noir mat", r: "LKEN86245"},
+            {n: "Noir structurant", r: "LKEN86735"},
+            {n: "ETCH PRIMER protect steel form corrosion", r: "LKEN83270"}
+        ],
+        "AUTRE": [
+            {n: "Cleaner plastique", r: "K34699"},
+            {n: "Gant protection", r: "1613412380"},
+            {n: "Glu cyanno liquide", r: "GET1CY20"},
+            {n: "pinceau retouche", r: "GET3PRV"},
+            {n: "Chican kent", r: "LKEN85385"},
+            {n: "Produit jante", r: "LBAR37136"},
+            {n: "Double face", r: "LKEN87099"},
+            {n: "Lingettes nettoyantes masque ", r: "3Mk0105"},
+            {n: "Protection écran balance ", r: "SAHTMXUCOV"},
+            {n: "Protection cadran de balance", r: "PPG30470150"},
+            {n: "Protection pied de balance", r: "PPG30470151"},
+            {n: "Protection plateau de balance", r: "PPG30470152"},
+            {n: "Joint kent PROSEAL 303", r: "LKEN85473"},
+            {n: "Buse standard joint", r: "LKEN34199"},
+            {n: "Guide de ponçage noir ", r: "3M00009560"},
+            {n: "Applicateur témoin de ponçage ", r: "3M00095061"},
+            {n: "Tuyau cabine", r: "RAL AISB1010"},
+            {n: "Brosse violette décapante ", r: "3M00051893", s: 10},
+            {n: "Acrysol", r: "LKEN83930"}
+        ],
+        "RÉPARATION PLASTIQUE": [
+            {n: "Colle plastique 1.5 min", r: "LKEN86431"},
+            {n: "Colle plastique 30 secondes", r: "LKEN86703"},
+            {n: "Buse colle plastique ", r: "LKEN86393"},
+            {n: "Agrafes torsadé ", r: "LKEN86040"},
+            {n: "Agrafes longue ", r: "LKEN86358"},
+            {n: "Agrafes angle ext", r: "LKEN86279"},
+            {n: "Agrafes angle int", r: "LKEN86280"},
+            {n: "Agrafes normal ", r: "LKEN86038"},
+            {n: "Grillage ", r: "LGET104796"}
+        ],
+        "VITRAGE": [
+            {n: "Résine de remplissage ", r: "LKEN84701"},
+            {n: "Résine de finition ", r: "LKEN84702"},
+            {n: "Forêt pare-brise ", r: "LKEN83707"},
+            {n: "Film pare-brise ", r: "LKEN084706"},
+            {n: "Passe fil pare-brise", r: "LKENE0109"},
+            {n: "Corde à piano ", r: "LKENE0209"}
+        ],
+        "PROTECTION": [
+            {n: "Masque poussière ffp2", r: "3M0008822", s: 10}
+        ],
+        "PEINTURE": [
+            {n: "Buse 1.8", r: "3M00026718"},
+            {n: "Buse 2.0", r: "3M00026720"},
+            {n: "Buse 1.2 noir", r: "3M00026912"},
+            {n: "Buse 1.3 noir", r: "3M00026913"}
+        ],
+        "RIVETS": [
+            {n: "Restagraf rivet metal diamètre 4,8", r: "11421"},
+            {n: "Restagraf rivet noir diamètre 4,8", r: "11555"}
+        ]
+    };
 
 
 
