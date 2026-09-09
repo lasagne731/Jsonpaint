@@ -460,14 +460,16 @@
         </div>
     </div>
 
-    <div class="config-box box-orange">
-        <h3 style="margin-top:0; font-size: 14px;">📂 SAUVEGARDE</h3>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-            <button onclick="exportData()" class="btn-action" style="background: #374151;">💾 SAUVEGARDER</button>
-            <button onclick="document.getElementById('importFile').click()" class="btn-action" style="background: #d97706;">📥 CHARGER</button>
+        <div class="config-box box-orange">
+        <h3 style="margin-top:0; font-size: 14px;">📂 SAUVEGARDE / RÉINITIALISATION</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+            <button onclick="exportData()" class="btn-action" style="background: #374151; padding: 0.5rem; font-size: 11px;">💾 SAUV.</button>
+            <button onclick="document.getElementById('importFile').click()" class="btn-action" style="background: #d97706; padding: 0.5rem; font-size: 11px;">📥 CHARGER</button>
+            <button onclick="resetCatalogue()" class="btn-action" style="background: #dc2626; padding: 0.5rem; font-size: 11px;">🔄 DÉFAUT</button>
             <input type="file" id="importFile" style="display:none" accept=".json" onchange="importData(event)">
         </div>
     </div>
+
 
     <div class="config-box" style="background: #e0e7ff; border-color: #a5b4fc;">
          <h3 style="margin-top:0; font-size: 14px;">📑 CRÉER RAYON</h3>
@@ -666,7 +668,16 @@ function updateManualListDisplay() {
     });
 }
 
-
+                function resetCatalogue() {
+            if(confirm("Attention : Voulez-vous vraiment remettre la liste par défaut ? Toutes vos modifications et nouveaux articles seront perdus.")) {
+                // On recharge les données par défaut
+                myData = JSON.parse(JSON.stringify(defaultData));
+                saveToStorage(); 
+                initTabs(); 
+                showTab("CONFIG");
+                alert("La liste par défaut a été restaurée !");
+            }
+        }
 
 
         function exportData() {
